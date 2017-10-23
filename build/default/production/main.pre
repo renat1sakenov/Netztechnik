@@ -3914,7 +3914,97 @@ extern void DelayFor18TCY(void);
 extern void DelayPORXLCD(void);
 extern void DelayXLCD(void);
 
-# 12 "main.c"
+# 2008 "adc.h"
+union ADCResult
+{
+int lr;
+char br[2];
+};
+
+char BusyADC (void);
+
+void ConvertADC (void);
+
+void CloseADC(void);
+
+# 2026
+int ReadADC(void);
+
+# 2040
+void OpenADC ( unsigned char ,
+unsigned char ,
+unsigned char );
+
+# 2084
+void SetChanADC(unsigned char );
+
+# 2100
+void SelChanConvADC( unsigned char );
+
+# 4 "../../../../../../opt/microchip/xc8/v1.44/include/__size_t.h"
+typedef unsigned size_t;
+
+# 7 "../../../../../../opt/microchip/xc8/v1.44/include/stdarg.h"
+typedef void * va_list[1];
+
+#pragma intrinsic(__va_start)
+extern void * __va_start(void);
+
+#pragma intrinsic(__va_arg)
+extern void * __va_arg(void *, ...);
+
+# 43 "../../../../../../opt/microchip/xc8/v1.44/include/stdio.h"
+struct __prbuf
+{
+char * ptr;
+void (* func)(char);
+};
+
+# 29 "../../../../../../opt/microchip/xc8/v1.44/include/errno.h"
+extern int errno;
+
+# 12 "../../../../../../opt/microchip/xc8/v1.44/include/conio.h"
+extern void init_uart(void);
+
+extern char getch(void);
+extern char getche(void);
+extern void putch(char);
+extern void ungetch(char);
+
+extern __bit kbhit(void);
+
+# 23
+extern char * cgets(char *);
+extern void cputs(const char *);
+
+# 88 "../../../../../../opt/microchip/xc8/v1.44/include/stdio.h"
+extern int cprintf(char *, ...);
+#pragma printf_check(cprintf)
+
+
+
+extern int _doprnt(struct __prbuf *, const register char *, register va_list);
+
+
+# 180
+#pragma printf_check(vprintf) const
+#pragma printf_check(vsprintf) const
+
+extern char * gets(char *);
+extern int puts(const char *);
+extern int scanf(const char *, ...) __attribute__((unsupported("scanf() is not supported by this compiler")));
+extern int sscanf(const char *, const char *, ...) __attribute__((unsupported("sscanf() is not supported by this compiler")));
+extern int vprintf(const char *, va_list) __attribute__((unsupported("vprintf() is not supported by this compiler")));
+extern int vsprintf(char *, const char *, va_list) __attribute__((unsupported("vsprintf() is not supported by this compiler")));
+extern int vscanf(const char *, va_list ap) __attribute__((unsupported("vscanf() is not supported by this compiler")));
+extern int vsscanf(const char *, const char *, va_list) __attribute__((unsupported("vsscanf() is not supported by this compiler")));
+
+#pragma printf_check(printf) const
+#pragma printf_check(sprintf) const
+extern int sprintf(char *, const char *, ...);
+extern int printf(const char *, ...);
+
+# 14 "main.c"
 void DelayFor18TCY( void )
 {_delay((unsigned long)((20)*(4000000/4000000.0)));
 return;
@@ -3930,7 +4020,7 @@ void DelayXLCD(void)
 _delay((unsigned long)((5)*(4000000/4000.0)));
 }
 
-# 30
+# 32
 int main() {
 _delay((unsigned long)((100)*(4000000/4000.0)));
 LATA = 0xFF;
@@ -3942,13 +4032,41 @@ WriteCmdXLCD(0x06);
 WriteCmdXLCD(0x0C);
 
 __nop();
+char str_tmp[20];
+
 while(1)
 {
-putrsXLCD("jdjd1337");
-SetDDRamAddr(0x40);
+int tmp;
+unsigned char channel=0x00,config1=0x00,config2=0x00,config3=0x00,portconfig=0x00,i=0;
+TRISAbits.RA0 = 1;
+config1 = 0b11001111 | 0b11111111 | 0b11110101 ;
+config2 = 0b10000111 | 0b01111111 | 0b11111100 ;
+portconfig = 0b11111110 ;
+OpenADC(config1,config2,portconfig);
+
+ConvertADC();
+while(BusyADC());
+tmp = ReadADC();
+
+sprintf(str_tmp, "%d",tmp);
 
 
+putsXLCD(str_tmp);
+
+_delay((unsigned long)((300)*(4000000/4000.0)));
+OpenXLCD( 0b00101100 & 0b00111000 );
+while(BusyXLCD());
+WriteCmdXLCD(0x06);
+WriteCmdXLCD(0x0C);
+putsXLCD("jsfjdjd");
+_delay((unsigned long)((300)*(4000000/4000.0)));
+OpenXLCD( 0b00101100 & 0b00111000 );
+while(BusyXLCD());
+WriteCmdXLCD(0x06);
+WriteCmdXLCD(0x0C);
+CloseADC();
 }
+
 
 
 return 1;

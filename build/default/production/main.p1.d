@@ -1,6 +1,7 @@
  build/default/production/main.d  \
  build/default/production/main.p1:  \
  main.c  \
+../../../../../../opt/microchip/xc8/v1.44/include/errno.h  \
 ../../../../../../opt/microchip/xc8/v1.44/include/p18cxxx.h  \
 XLCD.H  \
 ../../../../../../opt/microchip/xc8/v1.44/include/htc.h  \
@@ -10,6 +11,13 @@ XLCD.H  \
 ../../../../../../opt/microchip/xc8/v1.44/include/pic18f4520.h  \
 ../../../../../../opt/microchip/xc8/v1.44/include/cci.h  \
 ../../../../../../opt/microchip/xc8/v1.44/include/xc.h  \
+../../../../../../opt/microchip/xc8/v1.44/include/stdio.h  \
+adc.h  \
+../../../../../../opt/microchip/xc8/v1.44/include/__null.h  \
 ../../../../../../opt/microchip/xc8/v1.44/include/pic18_chip_select.h  \
+../../../../../../opt/microchip/xc8/v1.44/include/conio.h  \
+../../../../../../opt/microchip/xc8/v1.44/include/plib/pconfig.h  \
+../../../../../../opt/microchip/xc8/v1.44/include/stdarg.h  \
+../../../../../../opt/microchip/xc8/v1.44/include/__size_t.h  \
 ../../../../../../opt/microchip/xc8/v1.44/include/errata.h  \
 Definitions.h 
