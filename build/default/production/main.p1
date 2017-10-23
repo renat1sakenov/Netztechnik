@@ -1,10 +1,10 @@
 Version 3.2 HI-TECH Software Intermediate Code
 [v F2995 `(v ~T0 @X0 1 tf1`ul ]
-"164 /opt/microchip/xc8/v1.44/include/pic18.h
+"164 ../../../../../../opt/microchip/xc8/v1.44/include/pic18.h
 [v __delay `JF2995 ~T0 @X0 0 e ]
 [p i __delay ]
 [p mainexit ]
-"975 /opt/microchip/xc8/v1.44/include/pic18f4520.h
+"975 ../../../../../../opt/microchip/xc8/v1.44/include/pic18f4520.h
 [v _LATA `Vuc ~T0 @X0 0 e@3977 ]
 "1087
 [v _LATB `Vuc ~T0 @X0 0 e@3978 ]
@@ -14,7 +14,7 @@ Version 3.2 HI-TECH Software Intermediate Code
 [v _BusyXLCD `(uc ~T0 @X0 0 ef ]
 "120
 [v _WriteCmdXLCD `(v ~T0 @X0 0 ef1`uc ]
-"43 /opt/microchip/xc8/v1.44/include/pic18.h
+"43 ../../../../../../opt/microchip/xc8/v1.44/include/pic18.h
 [v ___nop `(v ~T0 @X0 0 ef ]
 [p i ___nop ]
 "140 XLCD.H
@@ -25,7 +25,7 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; ;htc.h: 28: extern double __fpnormalize(double);
 [; ;xc8debug.h: 14: extern void __builtin_software_breakpoint(void);
 [; ;pic18f4520.h: 50: extern volatile unsigned char PORTA @ 0xF80;
-"52 /opt/microchip/xc8/v1.44/include/pic18f4520.h
+"52 ../../../../../../opt/microchip/xc8/v1.44/include/pic18f4520.h
 [; ;pic18f4520.h: 52: asm("PORTA equ 0F80h");
 [; <" PORTA equ 0F80h ;# ">
 [; ;pic18f4520.h: 55: typedef union {
@@ -2942,9 +2942,9 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; ;main.c: 33: LATB = 0xFF;
 "33
 [e = _LATB -> -> 255 `i `uc ]
-[; ;main.c: 35: OpenXLCD( 0b00101100 & 0b00110100 );
+[; ;main.c: 35: OpenXLCD( 0b00101100 & 0b00111000 );
 "35
-[e ( _OpenXLCD (1 -> & -> 44 `i -> 52 `i `uc ]
+[e ( _OpenXLCD (1 -> & -> 44 `i -> 56 `i `uc ]
 [; ;main.c: 36: while(BusyXLCD());
 "36
 [e $U 280  ]
@@ -2967,29 +2967,26 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; ;main.c: 42: {
 "42
 {
-[; ;main.c: 43: putrsXLCD("Test1337");
+[; ;main.c: 43: putrsXLCD("jdjd1337");
 "43
 [e ( _putrsXLCD (1 :s 1C ]
 [; ;main.c: 44: SetDDRamAddr(0x40);
 "44
 [e ( _SetDDRamAddr (1 -> -> 64 `i `uc ]
-[; ;main.c: 45: putrsXLCD("LCD Display     ");
-"45
-[e ( _putrsXLCD (1 :s 2C ]
-"46
+"47
 }
 [e :U 283 ]
 "41
 [e $U 284  ]
 [e :U 285 ]
-[; ;main.c: 46: }
-[; ;main.c: 63: return 1;
-"63
+[; ;main.c: 47: }
+[; ;main.c: 50: return 1;
+"50
 [e ) -> 1 `i ]
 [e $UE 279  ]
-[; ;main.c: 64: }
-"64
+[; ;main.c: 51: }
+"51
 [e :UE 279 ]
 }
-[a 1C 84 101 115 116 49 51 51 55 0 ]
-[a 2C 76 67 68 32 68 105 115 112 108 97 121 32 32 32 32 32 0 ]
+[a 1C 106 100 106 100 49 51 51 55 0 ]
+

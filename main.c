@@ -32,7 +32,7 @@ int main() {
     LATA = 0xFF;
     LATB = 0xFF;
     
-	OpenXLCD( FOUR_BIT & LINE_5X10 );	
+	OpenXLCD( FOUR_BIT & LINES_5X7 );	
     while(BusyXLCD());              // Check if the LCD controller is not busy                              
     WriteCmdXLCD(0x06);            // move cursor right, don?t shift display
     WriteCmdXLCD(0x0C);            // turn display on without cursor
@@ -40,25 +40,12 @@ int main() {
 	Nop();	      
     while(1)
     {
-      putrsXLCD("Test1337");      // Display "Hello World"
-      SetDDRamAddr(0x40);            // shift cursor to beginning of second line
-      putrsXLCD("LCD Display     ");      // Display "LCD display"
+      putrsXLCD("jdjd1337");      // Display "Hello World"
+      SetDDRamAddr(0x40);         // shift cursor to beginning of second line
+      
+              
     }    
     
-    /*
-    OpenXLCD(EIGHT_BIT & LINES_5X7);
-    while(BusyXLCD());
-    PORTB = 255;
-    WriteCmdXLCD(0x01);
-    while(1){
-        //PORTBbits.RB4 = 1;
-       
-        __delay_ms(100);
-        putsXLCD("test");
-        Nop();
-        __delay_ms(500);
-        Nop();
-    }
-    */
+
     return 1;
 }
