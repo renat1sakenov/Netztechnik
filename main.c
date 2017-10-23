@@ -40,7 +40,7 @@ int main() {
 	Nop();	      
     while(1)
     {
-      putrsXLCD("Test");      // Display "Hello World"
+      putrsXLCD("Test1337");      // Display "Hello World"
       SetDDRamAddr(0x40);            // shift cursor to beginning of second line
       putrsXLCD("LCD Display     ");      // Display "LCD display"
     }    
