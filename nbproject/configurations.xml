@@ -7,6 +7,7 @@
       <itemPath>Definitions.h</itemPath>
       <itemPath>XLCD.H</itemPath>
       <itemPath>adc.h</itemPath>
+      <itemPath>i2c.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -34,6 +35,63 @@
       <itemPath>adcread.c</itemPath>
       <itemPath>adcselchconv.c</itemPath>
       <itemPath>adcsetch.c</itemPath>
+      <itemPath>i2c1ack.c</itemPath>
+      <itemPath>i2c1clos.c</itemPath>
+      <itemPath>i2c1dtrd.c</itemPath>
+      <itemPath>i2c1eeap.c</itemPath>
+      <itemPath>i2c1eebw.c</itemPath>
+      <itemPath>i2c1eecr.c</itemPath>
+      <itemPath>i2c1eepw.c</itemPath>
+      <itemPath>i2c1eerr.c</itemPath>
+      <itemPath>i2c1eesr.c</itemPath>
+      <itemPath>i2c1gets.c</itemPath>
+      <itemPath>i2c1idle.c</itemPath>
+      <itemPath>i2c1nack.c</itemPath>
+      <itemPath>i2c1open.c</itemPath>
+      <itemPath>i2c1puts.c</itemPath>
+      <itemPath>i2c1read.c</itemPath>
+      <itemPath>i2c1rstr.c</itemPath>
+      <itemPath>i2c1stop.c</itemPath>
+      <itemPath>i2c1strt.c</itemPath>
+      <itemPath>i2c1writ.c</itemPath>
+      <itemPath>i2c2ack.c</itemPath>
+      <itemPath>i2c2clos.c</itemPath>
+      <itemPath>i2c2dtrd.c</itemPath>
+      <itemPath>i2c2eeap.c</itemPath>
+      <itemPath>i2c2eebw.c</itemPath>
+      <itemPath>i2c2eecr.c</itemPath>
+      <itemPath>i2c2eepw.c</itemPath>
+      <itemPath>i2c2eerr.c</itemPath>
+      <itemPath>i2c2eesr.c</itemPath>
+      <itemPath>i2c2gets.c</itemPath>
+      <itemPath>i2c2idle.c</itemPath>
+      <itemPath>i2c2nack.c</itemPath>
+      <itemPath>i2c2open.c</itemPath>
+      <itemPath>i2c2puts.c</itemPath>
+      <itemPath>i2c2read.c</itemPath>
+      <itemPath>i2c2rstr.c</itemPath>
+      <itemPath>i2c2stop.c</itemPath>
+      <itemPath>i2c2strt.c</itemPath>
+      <itemPath>i2c2writ.c</itemPath>
+      <itemPath>i2c_ack.c</itemPath>
+      <itemPath>i2c_clos.c</itemPath>
+      <itemPath>i2c_dtrd.c</itemPath>
+      <itemPath>i2c_eeap.c</itemPath>
+      <itemPath>i2c_eebw.c</itemPath>
+      <itemPath>i2c_eecr.c</itemPath>
+      <itemPath>i2c_eepw.c</itemPath>
+      <itemPath>i2c_eerr.c</itemPath>
+      <itemPath>i2c_eesr.c</itemPath>
+      <itemPath>i2c_gets.c</itemPath>
+      <itemPath>i2c_idle.c</itemPath>
+      <itemPath>i2c_nack.c</itemPath>
+      <itemPath>i2c_open.c</itemPath>
+      <itemPath>i2c_puts.c</itemPath>
+      <itemPath>i2c_read.c</itemPath>
+      <itemPath>i2c_rstr.c</itemPath>
+      <itemPath>i2c_stop.c</itemPath>
+      <itemPath>i2c_strt.c</itemPath>
+      <itemPath>i2c_writ.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

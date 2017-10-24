@@ -10,6 +10,7 @@
 #include "XLCD.H"
 #include "adc.h"
 #include <stdio.h>
+#include "i2c.h"
 
 void DelayFor18TCY( void ) //18+ cycles delay
 {
