@@ -11,6 +11,7 @@
 #include "adc.h"
 #include <stdio.h>
 #include "i2c.h"
+#include "timers.h"
 
 void DelayFor18TCY( void ) //18+ cycles delay
 {
@@ -46,35 +47,58 @@ int main() {
     initXLCD();
           
     char str_tmp[20];
-    
+    char time[30];
     int tmp;
-    unsigned char channel=0x00,config1=0x00,config2=0x00,config3=0x00,portconfig=0x00,i=0;
+    int sec, min, hour =0;
+    unsigned char channel=0x00,adc_config1=0x00,adc_config2=0x00,config3=0x00,portconfig=0x00,i=0;
     TRISAbits.RA0 = 1;
-    config1 = ADC_FOSC_4 & ADC_RIGHT_JUST & ADC_4_TAD ;
-    config2 = ADC_CH0 & ADC_INT_OFF & ADC_REF_VDD_VSS ;
+    adc_config1 = ADC_FOSC_4 & ADC_RIGHT_JUST & ADC_4_TAD ;
+    adc_config2 = ADC_CH0 & ADC_INT_OFF & ADC_REF_VDD_VSS ;
     portconfig = ADC_1ANA ;
-    OpenADC(config1,config2,portconfig);
+    OpenADC(adc_config1,adc_config2,portconfig);
 
+    unsigned char timer_config1=0x00;
+    unsigned char timer_config2=0x00;
+    unsigned int timer_value=0x00;
+    timer_config1 = T1_16BIT_RW | T1_SOURCE_EXT | T1_PS_1_2| T1_OSC1EN_OFF | T1_SYNC_EXT_OFF | TIMER_INT_ON;
+    OpenTimer1(timer_config1);
+    
+    WriteTimer1(timer_value);
     //main routine
+    initXLCD();
     while(1)
     {
         //read temp
         ConvertADC();
         while(BusyADC());
         tmp = ReadADC();
-        sprintf(str_tmp, "%d",tmp);
+        //initXLCD();
+        //putsXLCD("Test");
+        //__delay_ms(500);
+        //initXLCD();
         
-        //display temp
-        putsXLCD(str_tmp);     
         
-        __delay_ms(500);
-        initXLCD();
-        putsXLCD("Test");
-        __delay_ms(500);
-        initXLCD();
-    }    
-    
-    CloseADC();
+        if(PIR1bits.TMR1IF=1)
+        {
+            sec +=1;
+            if (sec > 30){
+                sec = 0;
+                min +=1;
+                if(min > 6){
+                    min = 0;
+                    hour += 1;
+                }
+            }
+            sprintf(time, "%d:%d:%d", hour,min,sec);
+            sprintf(str_tmp, "%d, %s",tmp, time);
+        
+            //display temp
+            putsXLCD(str_tmp);     
+            __delay_ms(500);
+        }
+        CloseADC();
+        CloseTimer1();
 
-    return 1;
+        return 1;
+    }
 }
