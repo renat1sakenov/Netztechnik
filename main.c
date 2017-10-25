@@ -112,25 +112,28 @@ int main() {
     LATB = 0xFF;
     TRISC = 0xFF;
     SSPADD = 0x27;
-    
+  
+    initXLCD();
     //prepare EEPROM
     OpenI2C(MASTER, SLEW_OFF); 
     
-    /*
-     EEPROM TEST
     
+    // EEPROM TEST
+    /*
     if(HDByteWriteI2C(0xA0,0x00,0x10,'a') == 0){
         putsXLCD("success");
     }else putsXLCD("failure");
     __delay_ms(5000);
     char b;
+    initXLCD();
     HDByteReadI2C(0xA0,0x00,0x10,b,0x01);
     putsXLCD(b);
-               
+     __delay_ms(5000);
+      */         
      
-     */
     
-    initXLCD();
+    
+
           
     char str_tmp[20];
     char time[30];
@@ -169,7 +172,7 @@ int main() {
         if(PIR1bits.TMR1IF=1)
         {
             msec++;
-            if(msec>=1)
+            if(msec>=10)
             {
                 sec++;
                 msec=0;
