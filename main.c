@@ -36,6 +36,11 @@ void initXLCD(void)
     WriteCmdXLCD(0x0C);            // turn display on without cursor    
 }
 
+
+
+
+
+
 /*
  * 
  */
@@ -49,7 +54,9 @@ int main() {
     char str_tmp[20];
     char time[30];
     int tmp;
-    int sec, min, hour =0;
+    float converted_temp;
+    
+    int msec, sec, min, hour;
     unsigned char channel=0x00,adc_config1=0x00,adc_config2=0x00,config3=0x00,portconfig=0x00,i=0;
     TRISAbits.RA0 = 1;
     adc_config1 = ADC_FOSC_4 & ADC_RIGHT_JUST & ADC_4_TAD ;
@@ -65,39 +72,51 @@ int main() {
     
     WriteTimer1(timer_value);
     //main routine
-    initXLCD();
+    //initXLCD();
     while(1)
     {
         //read temp
         ConvertADC();
         while(BusyADC());
         tmp = ReadADC();
+        converted_temp = ((float)tmp *100/255);
         //initXLCD();
         //putsXLCD("Test");
         //__delay_ms(500);
         //initXLCD();
         
-        
         if(PIR1bits.TMR1IF=1)
         {
-            sec +=1;
-            if (sec > 30){
-                sec = 0;
-                min +=1;
-                if(min > 6){
-                    min = 0;
-                    hour += 1;
+            msec++;
+            if(msec>=1)
+            {
+                sec++;
+                msec=0;
+                if(sec>=60)
+                {
+                    min++;
+                    sec=0;
+                    if(min>=60)
+                    {
+                        hour++;
+                        min=0;
+                        if(hour>=24)
+                        {
+                            hour=0;
+                        }
+                    }
                 }
             }
-            sprintf(time, "%d:%d:%d", hour,min,sec);
-            sprintf(str_tmp, "%d, %s",tmp, time);
+            
+            sprintf(time, "%2d:%2d:%2d", hour,min,sec);
+            sprintf(str_tmp, "%.2f, %s",converted_temp, time);
         
             //display temp
             putsXLCD(str_tmp);     
-            __delay_ms(500);
+          
         }
         CloseADC();
-        CloseTimer1();
+        //CloseTimer1();
 
         return 1;
     }
