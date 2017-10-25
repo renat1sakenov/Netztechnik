@@ -13,68 +13,6 @@
 #include "i2c.h"
 #include "timers.h"
 
-/**
- * Function from Mr. Gontean
- * @param ControlByte
- * @param HighAdd
- * @param LowAdd
- * @param data
- * @return 
- */
-unsigned char HDByteWriteI2C( unsigned char ControlByte, unsigned char HighAdd, unsigned char LowAdd, unsigned char data )
-{
-  IdleI2C();                      // ensure module is idle
-  StartI2C();                     // initiate START condition
-  while ( SSPCON2bits.SEN );      // wait until start condition is over 
-  WriteI2C( ControlByte );        // write 1 byte - R/W bit should be 0
-  IdleI2C();                      // ensure module is idle
-  WriteI2C( HighAdd );            // write address byte to EEPROM
-  IdleI2C();                      // ensure module is idle
-  WriteI2C( LowAdd );             // write address byte to EEPROM
-  IdleI2C();                      // ensure module is idle
-  WriteI2C ( data );              // Write data byte to EEPROM
-  IdleI2C();                      // ensure module is idle
-  StopI2C();                      // send STOP condition
-  while ( SSPCON2bits.PEN );      // wait until stop condition is over 
-  while (EEAckPolling(ControlByte));  //Wait for write cycle to complete
-  return ( 0 );                   // return with no error
-}
-
-/********************************************************************
-*     Function Name:    HDByteReadI2C                               *
-*     Parameters:       EE memory ControlByte, address, pointer and *
-*                       length bytes.                               *
-*     Description:      Reads data string from I2C EE memory        *
-*                       device. This routine can be used for any I2C*
-*                       EE memory device, which only uses 1 byte of *
-*                       address data as in the 24LC01B/02B/04B/08B. *
-*                                                                   *  
-********************************************************************/
-
-unsigned char HDByteReadI2C( unsigned char ControlByte, unsigned char HighAdd, unsigned char LowAdd, unsigned char *data, unsigned char length )
-{
-  IdleI2C();                      // ensure module is idle
-  StartI2C();                     // initiate START condition
-  while ( SSPCON2bits.SEN );      // wait until start condition is over 
-  WriteI2C( ControlByte );        // write 1 byte 
-  IdleI2C();                      // ensure module is idle
-  WriteI2C( HighAdd );            // WRITE word address to EEPROM
-  IdleI2C();                      // ensure module is idle
-  while ( SSPCON2bits.RSEN );     // wait until re-start condition is over 
-  WriteI2C( LowAdd );             // WRITE word address to EEPROM
-  IdleI2C();                      // ensure module is idle
-  RestartI2C();                   // generate I2C bus restart condition
-  while ( SSPCON2bits.RSEN );     // wait until re-start condition is over 
-  WriteI2C( ControlByte | 0x01 ); // WRITE 1 byte - R/W bit should be 1 for read
-  IdleI2C();                      // ensure module is idle
-  getsI2C( data, length );       // read in multiple bytes
-  NotAckI2C();                    // send not ACK condition
-  while ( SSPCON2bits.ACKEN );    // wait until ACK sequence is over 
-  StopI2C();                      // send STOP condition
-  while ( SSPCON2bits.PEN );      // wait until stop condition is over 
-  return ( 0 );                   // return with no error
-}
-
 void DelayFor18TCY( void ) //18+ cycles delay
 {
     __delay_us(20);   
@@ -105,25 +43,6 @@ int main() {
     __delay_ms(100);
     LATA = 0xFF;
     LATB = 0xFF;
-    TRISC = 0xFF;
-    SSPADD = 0x27;
-    
-    //prepare EEPROM
-    OpenI2C(MASTER, SLEW_OFF); 
-    
-    /*
-     EEPROM TEST
-    
-    if(HDByteWriteI2C(0xA0,0x00,0x10,'a') == 0){
-        putsXLCD("success");
-    }else putsXLCD("failure");
-    __delay_ms(5000);
-    char b;
-    HDByteReadI2C(0xA0,0x00,0x10,b,0x01);
-    putsXLCD(b);
-               
-     
-     */
     
     initXLCD();
           
