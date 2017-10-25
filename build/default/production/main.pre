@@ -4074,7 +4074,51 @@ void WriteTimer3 ( unsigned int timer3);
 # 1179
 void SetTmrCCPSrc( unsigned char );
 
-# 16 "main.c"
+# 24 "main.c"
+unsigned char HDByteWriteI2C( unsigned char ControlByte, unsigned char HighAdd, unsigned char LowAdd, unsigned char data )
+{
+IdleI2C();
+SSPCON2bits.SEN=1;while(SSPCON2bits.SEN);
+while ( SSPCON2bits.SEN );
+WriteI2C( ControlByte );
+IdleI2C();
+WriteI2C( HighAdd );
+IdleI2C();
+WriteI2C( LowAdd );
+IdleI2C();
+WriteI2C ( data );
+IdleI2C();
+SSPCON2bits.PEN=1;while(SSPCON2bits.PEN);
+while ( SSPCON2bits.PEN );
+while (EEAckPolling(ControlByte));
+return ( 0 );
+}
+
+# 54
+unsigned char HDByteReadI2C( unsigned char ControlByte, unsigned char HighAdd, unsigned char LowAdd, unsigned char *data, unsigned char length )
+{
+IdleI2C();
+SSPCON2bits.SEN=1;while(SSPCON2bits.SEN);
+while ( SSPCON2bits.SEN );
+WriteI2C( ControlByte );
+IdleI2C();
+WriteI2C( HighAdd );
+IdleI2C();
+while ( SSPCON2bits.RSEN );
+WriteI2C( LowAdd );
+IdleI2C();
+SSPCON2bits.RSEN=1;while(SSPCON2bits.RSEN);
+while ( SSPCON2bits.RSEN );
+WriteI2C( ControlByte | 0x01 );
+IdleI2C();
+getsI2C( data, length );
+SSPCON2bits.ACKDT=1;SSPCON2bits.ACKEN=1;while(SSPCON2bits.ACKEN);
+while ( SSPCON2bits.ACKEN );
+SSPCON2bits.PEN=1;while(SSPCON2bits.PEN);
+while ( SSPCON2bits.PEN );
+return ( 0 );
+}
+
 void DelayFor18TCY( void )
 {
 _delay((unsigned long)((20)*(4000000/4000000.0)));
@@ -4098,12 +4142,18 @@ WriteCmdXLCD(0x06);
 WriteCmdXLCD(0x0C);
 }
 
-# 42
+# 104
 int main() {
 _delay((unsigned long)((100)*(4000000/4000.0)));
 LATA = 0xFF;
 LATB = 0xFF;
+TRISC = 0xFF;
+SSPADD = 0x27;
 
+
+OpenI2C(0b00001000, 0b10000000);
+
+# 128
 initXLCD();
 
 char str_tmp[20];
@@ -4133,7 +4183,7 @@ ConvertADC();
 while(BusyADC());
 tmp = ReadADC();
 
-# 81
+# 162
 if(PIR1bits.TMR1IF=1)
 {
 sec +=1;
