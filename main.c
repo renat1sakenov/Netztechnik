@@ -231,12 +231,11 @@ int main() {
     initXLCD();
     //prepare EEPROM
     OpenI2C(MASTER, SLEW_OFF); 
-    
+    /*
     union FLOAT funion;
     funion.number = 24.3f;
  
     char test2[3] = {'h','m','s'};
-    /* 0x66, 0xc2, 0x41, 0x00*/
     
     int ret2 = write_data(funion.bytes,test2);
     char str2[1];
@@ -262,7 +261,7 @@ int main() {
     HDByteReadI2C(0xA0,0x00,0x10,b,0x01);
     putsXLCD(b);
      __delay_ms(5000);
-     
+     */
      
     char str_tmp[20];
     char time[30];
