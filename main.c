@@ -13,6 +13,12 @@
 #include "i2c.h"
 #include "timers.h"
 
+char eeprom_laddress = 0x00;
+char eeprom_haddress = 0x00;
+int block_size = 7;                 //4 bytes for temperature, 3 bytes for date
+int temp_size = 4;
+int date_size = 3;
+
 /**
  * Function from Mr. Gontean
  * @param ControlByte
@@ -90,6 +96,7 @@ void DelayXLCD(void)            // 5ms delay
     __delay_ms(5);                  // 5ms delay with 4MHz Clock
 }
  
+
 void initXLCD(void)
 {
     OpenXLCD( FOUR_BIT & LINES_5X7 );	
@@ -98,11 +105,40 @@ void initXLCD(void)
     WriteCmdXLCD(0x0C);            // turn display on without cursor    
 }
 
+int write_one_block(char** d[], int size)
+{
+    int i = 0;
+    while(eeprom_laddress < 0xFF & i < size)
+    {
+        HDByteWriteI2C(0xA0,eeprom_haddress,eeprom_laddress,d[i]);
+        i++;
+    }
+    if( i != size)
+    {
+        eeprom_laddress = 0;
+        if(eeprom_haddress < 0xFF)
+        {
+            eeprom_haddress++;
+            while(i < size){
+                HDByteWriteI2C(0xA0,eeprom_haddress,eeprom_laddress,d[i]);
+                i++;
+            }
+        }
+        else
+        {
+            //memory full
+            return -1;
+        }
+    }
+    return 0;
+}
 
+ int write_data(char** temp[], char** date[])
+ {
+     return write_one_block(temp,temp_size) + write_one_block(date,date_size);
+ }
 
-
-
-
+ 
 /*
  * 
  */
@@ -117,6 +153,15 @@ int main() {
     //prepare EEPROM
     OpenI2C(MASTER, SLEW_OFF); 
     
+    float f = 23.4;
+    char *s = (char *) &f;
+    
+    char test2[3] = {'a',' ','v'};
+    
+    int ret2 = write_data(s,test2);
+    char str2[1];
+    sprintf(str2,"%d",ret2);
+    putsXLCD(str2);
     
     // EEPROM TEST
     /*
@@ -129,12 +174,8 @@ int main() {
     HDByteReadI2C(0xA0,0x00,0x10,b,0x01);
     putsXLCD(b);
      __delay_ms(5000);
-      */         
+    */     
      
-    
-    
-
-          
     char str_tmp[20];
     char time[30];
     int tmp;
@@ -201,7 +242,7 @@ int main() {
         }
         CloseADC();
         //CloseTimer1();
-
+    
         return 1;
     }
 }
