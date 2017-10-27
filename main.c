@@ -4,7 +4,6 @@
  *
  * Created on October 16, 2017, 1:32 PM
  */
-
 #include <xc.h>
 #include "Definitions.h"
 #include "XLCD.H"
@@ -18,6 +17,15 @@ char eeprom_haddress = 0x00;
 int block_size = 7;                 //4 bytes for temperature, 3 bytes for date
 int temp_size = 4;
 int date_size = 3;
+
+
+
+union FLOAT
+{
+ float number;
+ unsigned char bytes[4];
+};
+
 
 /**
  * Function from Mr. Gontean
@@ -105,8 +113,44 @@ void initXLCD(void)
     WriteCmdXLCD(0x0C);            // turn display on without cursor    
 }
 
-int write_one_block(char** d[], int size)
+int traverse_one_block(unsigned char* d, int size, unsigned char rw, int sl,int sh)
 {
+    int i = 0;
+    while(sl < 0xFF & i < size)
+    {
+        if(rw == 'w')
+            HDByteWriteI2C(0xA0,sh,sl,*d);
+        else
+            HDByteReadI2C(0xA0,sh,sl,*d,1);
+        d++;
+    }
+    if( i != size)
+    {
+        sl = 0;
+        if(sh < 0xFF)
+        {
+            sh++;
+            while(i < size){
+                if(rw == 'w')
+                    HDByteWriteI2C(0xA0,sh,sl,d[i]);
+                else
+                    HDByteReadI2C(0xA0,sh,sl,d[i],1);
+                i++;
+            }
+        }
+        else
+        {
+            //reached last block
+            return -1;
+        }
+    }
+    return 0;    
+}
+
+int write_one_block(unsigned char* d, int size)
+{
+    return traverse_one_block(d,size,'w',&eeprom_haddress,&eeprom_laddress);
+    /*
     int i = 0;
     while(eeprom_laddress < 0xFF & i < size)
     {
@@ -131,13 +175,48 @@ int write_one_block(char** d[], int size)
         }
     }
     return 0;
+    */
 }
 
- int write_data(char** temp[], char** date[])
+ int write_data(unsigned char * temp, unsigned char * date)
  {
      return write_one_block(temp,temp_size) + write_one_block(date,date_size);
  }
-
+ 
+ /**
+  * 
+  * @return 
+  */
+ char * read_data()
+ {
+     int counter = block_size;
+     int tla = eeprom_laddress;
+     int tha = eeprom_haddress;
+     while(tla > 0x00 && counter > 0)
+     {
+         counter--;
+         tla--;
+     }
+     if(counter > 0)
+     {
+         tla = 0xFF;
+         if(tha > 0){
+             tha--;
+             while(counter > 0){
+                 tla--;
+             }
+         }
+         else
+         {
+             //already on block 0
+             return NULL;
+         }
+     }
+     //set to right position, read from here
+     unsigned char res[7];
+     traverse_one_block(res,block_size,'r',tla,tha);
+     return res;
+ }
  
 /*
  * 
@@ -153,18 +232,27 @@ int main() {
     //prepare EEPROM
     OpenI2C(MASTER, SLEW_OFF); 
     
-    float f = 23.4;
-    char *s = (char *) &f;
+    union FLOAT funion;
+    funion.number = 24.3f;
+ 
+    char test2[3] = {'h','m','s'};
+    /* 0x66, 0xc2, 0x41, 0x00*/
     
-    char test2[3] = {'a',' ','v'};
-    
-    int ret2 = write_data(s,test2);
+    int ret2 = write_data(funion.bytes,test2);
     char str2[1];
     sprintf(str2,"%d",ret2);
     putsXLCD(str2);
+    __delay_ms(1000);
+    initXLCD();
+    char* res2 = read_data();
+    if(res2 == NULL)
+        putsXLCD("read failed");
+    else
+        putsXLCD(res2);
+    __delay_ms(1000);
     
     // EEPROM TEST
-    /*
+    
     if(HDByteWriteI2C(0xA0,0x00,0x10,'a') == 0){
         putsXLCD("success");
     }else putsXLCD("failure");
@@ -174,7 +262,7 @@ int main() {
     HDByteReadI2C(0xA0,0x00,0x10,b,0x01);
     putsXLCD(b);
      __delay_ms(5000);
-    */     
+     
      
     char str_tmp[20];
     char time[30];
@@ -242,7 +330,7 @@ int main() {
         }
         CloseADC();
         //CloseTimer1();
-    
+
         return 1;
-    }
+    }  
 }
