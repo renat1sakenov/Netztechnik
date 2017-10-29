@@ -17,7 +17,7 @@ char eeprom_haddress = 0x00;
 int block_size = 7;                 //4 bytes for temperature, 3 bytes for date
 int temp_size = 4;
 int date_size = 3;
-
+unsigned char result[7];                        //result
 
 union FLOAT
 {
@@ -117,49 +117,35 @@ void initXLCD(void)
     WriteCmdXLCD(0x0C);            // turn display on without cursor    
 }
 
-int traverse_one_block(unsigned char* d, int size, unsigned char rw, int* sh,int* sl)
+int write_one_block(unsigned char* d, int size)
 {
-    int i=0;
-    while(*sl < 0xFF & i < size)
+    int i = 0;
+    while(eeprom_laddress < 0xFF & i < size)
     {
-        if(rw == 'w'){
-            HDByteWriteI2C(0xA0,*sh,*sl,*d);
-        }
-        else
-        {
-            HDByteReadI2C(0xA0,*sh,*sl,d,0x01);
-        }
-        d++;i++;(*sl)++;
+        HDByteWriteI2C(0xA0,eeprom_haddress,eeprom_laddress++,*d);
+        i++;d++;
     }
     if( i != size)
     {
-        *sl = 0;
-        if(*sh < 0xFF)
+        eeprom_laddress = 0;
+        if(eeprom_haddress < 0xFF)
         {
-            (*sh)++;
+            eeprom_haddress++;
             while(i < size){
-                if(rw == 'w')
-                    HDByteWriteI2C(0xA0,*sh,*sl,*d);
-                else
-                    HDByteReadI2C(0xA0,*sh,*sl,d,1);
-                i++;d++;(*sl)++;
+                HDByteWriteI2C(0xA0,eeprom_haddress,eeprom_laddress++,*d);
+                i++;d++;
             }
         }
         else
         {
-            //reached last block
+            //memory full
             return -1;
         }
     }
-    return 0;    
+    return 0;
 }
 
-int write_one_block(unsigned char* d, int size)
-{
-    return traverse_one_block(d,size,'w',&eeprom_haddress,&eeprom_laddress);
-}
-
- int write_data(unsigned char * temp, unsigned char * date)
+int write_data(unsigned char * temp, unsigned char * date)
  {
      return write_one_block(temp,temp_size) + write_one_block(date,date_size);
  }
@@ -168,7 +154,7 @@ int write_one_block(unsigned char* d, int size)
   * 
   * @return 
   */
- unsigned char * read_data()
+ int read_data()
  {
      int counter = block_size;
      int tla = eeprom_laddress;
@@ -194,12 +180,10 @@ int write_one_block(unsigned char* d, int size)
              //already on block 0
              return NULL;
          }
-     }
-     //set to right position, read from here
-     unsigned char res[7];
-     if(traverse_one_block(res,block_size,'r',&tla,&tha) == 0)
-        return res;
-     else return NULL;
+     }     
+     if(HDByteReadI2C(0xA0,tha,tla,result,7) == 0)
+         return 0;
+     else return -1;
  }
  
 /*
@@ -216,7 +200,7 @@ int main() {
     OpenI2C(MASTER, SLEW_OFF); 
     
     union FLOAT funion;
-    funion.number = 18.0f;
+    funion.number = 16.0f;
  
     char test2[3] = {'a','b','c'};    
     int ret2 = write_data(funion.bytes,test2);
@@ -224,24 +208,23 @@ int main() {
     
     __delay_ms(1000);
     initXLCD();
-    
-    unsigned char * res2;
-    res2 = read_data();
-    
+
+    read_data();
     int j = 0;
     union FLOAT funion2;
     for(; j<4; j++)
-        funion2.bytes[j] = res2[j];
+        funion2.bytes[j] = result[j];
 
-    char temp[5];
-    sprintf(temp,"%.2f",funion2.number);
+    char temp[4];
+    sprintf(temp,"%f",funion2.number);
     
     char time[3];
     for(; j<7; j++)
-        time[j-4] = res2[j];
+        time[j-4] = result[j];
     
     putsXLCD(temp);
     __delay_ms(1000);
+    Nop();
     initXLCD();
     putsXLCD(time);
     __delay_ms(1000);
