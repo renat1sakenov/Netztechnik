@@ -12,6 +12,17 @@
 #include "i2c.h"
 #include "timers.h"
 
+union INT
+{
+    int n;
+    unsigned char byte;
+};
+union FLOAT
+{
+ float number;
+ unsigned char bytes[4];
+};
+
 char eeprom_laddress = 0x00;
 char eeprom_haddress = 0x00;
 int block_size = 7;                 //4 bytes for temperature, 3 bytes for date
@@ -19,19 +30,9 @@ int temp_size = 4;
 int date_size = 3;
 unsigned char result[7];                        //result
 
-union FLOAT
-{
- float number;
- unsigned char bytes[4];
-};
+union FLOAT converted_temp;
+union INT msec,sec,min,hour;
 
-void print_number(char str1[])
-{
-    char ps[5];
-    
-    sprintf(ps,"%d",str1);
-    putsXLCD(ps);
-}
 
 /**
  * Function from Mr. Gontean
@@ -109,7 +110,7 @@ void DelayXLCD(void)            // 5ms delay
     __delay_ms(5);                  // 5ms delay with 4MHz Clock
 }
  
-void initXLCD(void)
+void initXLCD()
 {
     OpenXLCD( FOUR_BIT & LINES_5X7 );	
     while(BusyXLCD());              // Check if the LCD controller is not busy                              
@@ -117,6 +118,33 @@ void initXLCD(void)
     WriteCmdXLCD(0x0C);            // turn display on without cursor    
 }
 
+void initADC(void)
+{
+    unsigned char channel=0x00,adc_config1=0x00,adc_config2=0x00,config3=0x00,portconfig=0x00,i=0;
+    TRISAbits.RA0 = 1;
+    adc_config1 = ADC_FOSC_4 & ADC_RIGHT_JUST & ADC_4_TAD ;
+    adc_config2 = ADC_CH0 & ADC_INT_OFF & ADC_REF_VDD_VSS ;
+    portconfig = ADC_1ANA ;
+    OpenADC(adc_config1,adc_config2,portconfig);    
+}
+
+void initTimer(void)
+{
+    unsigned char timer_config1=0x00;
+    unsigned char timer_config2=0x00;
+    unsigned int timer_value=0x00;
+    timer_config1 = T1_16BIT_RW | T1_SOURCE_EXT | T1_PS_1_2| T1_OSC1EN_OFF | T1_SYNC_EXT_OFF | TIMER_INT_ON;
+    OpenTimer1(timer_config1);
+    WriteTimer1(timer_value);
+}
+
+/**
+ * writes size bytes from d into the eeprom. start positions are eeprom_laddress / eeprom_haddress
+ * eeprom_l/h address are increased.
+ * @param d
+ * @param size
+ * @return 
+ */
 int write_one_block(unsigned char* d, int size)
 {
     int i = 0;
@@ -146,15 +174,16 @@ int write_one_block(unsigned char* d, int size)
 }
 
 int write_data(unsigned char * temp, unsigned char * date)
- {
+{
      return write_one_block(temp,temp_size) + write_one_block(date,date_size);
- }
+}
  
  /**
-  * 
+  * Puts the last 7 Bytes from the eeprom into "result" 
+  * if there are none returns -1
   * @return 
   */
- int read_data()
+ int read_data(void)
  {
      int counter = block_size;
      int tla = eeprom_laddress;
@@ -178,7 +207,7 @@ int write_data(unsigned char * temp, unsigned char * date)
          else
          {
              //already on block 0
-             return NULL;
+             return -1;
          }
      }     
      if(HDByteReadI2C(0xA0,tha,tla,result,7) == 0)
@@ -186,27 +215,31 @@ int write_data(unsigned char * temp, unsigned char * date)
      else return -1;
  }
  
-/*
- * 
- */
-int main() {
-    __delay_ms(100);
-    LATA = 0xFF;
-    LATB = 0xFF;
-    TRISC = 0xFF;
-    SSPADD = 0x27;
-  
-    initXLCD();
-    OpenI2C(MASTER, SLEW_OFF); 
-    
+ /**
+  * read the temperature into converted_temp
+  */
+ void read_temperature(void)
+ {
+    ConvertADC();
+    while(BusyADC());
+    converted_temp.number = ((float)ReadADC() *100/255);
+ }
+ 
+ 
+ void test_readwrite()
+{
+    /* TEST DATA
     union FLOAT funion;
     funion.number = 16.0f;
  
     char test2[3] = {'a','b','c'};    
+    char tmp_str2[5];
     int ret2 = write_data(funion.bytes,test2);
-    print_number(ret2);
+    sprintf(tmp_str2,"%d",ret2);
+    putsXLCD(tmp_str2);
     
     __delay_ms(1000);
+    */ 
     initXLCD();
 
     read_data();
@@ -218,86 +251,81 @@ int main() {
     char temp[4];
     sprintf(temp,"%f",funion2.number);
     
-    char time[3];
+    union INT time[3];
     for(; j<7; j++)
-        time[j-4] = result[j];
+        time[j-4].byte = result[j];
     
     putsXLCD(temp);
     __delay_ms(1000);
     Nop();
     initXLCD();
-    putsXLCD(time);
+    char str_temp2[10];
+    sprintf(str_temp2,"%d:%d:%d",time[0].n,time[1].n,time[2].n);
+    putsXLCD(str_temp2);
     __delay_ms(1000);
-
-     /*
-    char str_tmp[20];
-    char time[30];
-    int tmp;
-    float converted_temp;
+}
+ 
+/*
+ * 
+ */
+int main() {
+    __delay_ms(100);
+    LATA = 0xFF;
+    LATB = 0xFF;
+    TRISC = 0xFF;
+    SSPADD = 0x27;
     
-    int msec, sec, min, hour;
-    unsigned char channel=0x00,adc_config1=0x00,adc_config2=0x00,config3=0x00,portconfig=0x00,i=0;
-    TRISAbits.RA0 = 1;
-    adc_config1 = ADC_FOSC_4 & ADC_RIGHT_JUST & ADC_4_TAD ;
-    adc_config2 = ADC_CH0 & ADC_INT_OFF & ADC_REF_VDD_VSS ;
-    portconfig = ADC_1ANA ;
-    OpenADC(adc_config1,adc_config2,portconfig);
-
-    unsigned char timer_config1=0x00;
-    unsigned char timer_config2=0x00;
-    unsigned int timer_value=0x00;
-    timer_config1 = T1_16BIT_RW | T1_SOURCE_EXT | T1_PS_1_2| T1_OSC1EN_OFF | T1_SYNC_EXT_OFF | TIMER_INT_ON;
-    OpenTimer1(timer_config1);
+  
+    initADC();
+    initTimer();
+    OpenI2C(MASTER, SLEW_OFF); 
     
-    WriteTimer1(timer_value);
-    //main routine
-    //initXLCD();
+    char str_tmp[10];
+    char time[20];
+    
     while(1)
     {
-        //read temp
-        ConvertADC();
-        while(BusyADC());
-        tmp = ReadADC();
-        converted_temp = ((float)tmp *100/255);
-        //initXLCD();
-        //putsXLCD("Test");
-        //__delay_ms(500);
-        //initXLCD();
-        
         if(PIR1bits.TMR1IF=1)
         {
-            msec++;
-            if(msec>=10)
+            initXLCD();
+            msec.n++;
+            if(msec.n>=10)
             {
-                sec++;
-                msec=0;
-                if(sec>=60)
+                sec.n++;
+                msec.n=0;
+                if(sec.n>=60)
                 {
-                    min++;
-                    sec=0;
-                    if(min>=60)
+                    min.n++;
+                    sec.n=0;
+                    if(min.n>=60)
                     {
-                        hour++;
-                        min=0;
-                        if(hour>=24)
+                        hour.n++;
+                        min.n=0;
+                        /*if(hour>=24)
                         {
                             hour=0;
-                        }
+                        }*/
                     }
                 }
-            }
+            }            
+            read_temperature();  
+            sprintf(time, "%d:%d:%d", hour.n,min.n,sec.n);
+            sprintf(str_tmp, "%.2f %s",converted_temp.number, time);
+            putsXLCD(str_tmp);
             
-            sprintf(time, "%2d:%2d:%2d", hour,min,sec);
-            sprintf(str_tmp, "%.2f, %s",converted_temp, time);
-        
-            //display temp
-            putsXLCD(str_tmp);     
-          
+            if(min.n % 2 == 0 && sec.n == 0)
+            {
+                unsigned char date[3];
+                date[0] = hour.byte;
+                date[1] = min.byte;
+                date[2] = sec.byte;
+                write_data(converted_temp.bytes,date);
+                
+                initXLCD();
+                putsXLCD("MEM TEST");
+                __delay_ms(2000);
+                test_readwrite();
+            }   
         }
-        CloseADC();
-        //CloseTimer1();
-    
-        return 1;
     }
-     */  
 }
