@@ -1,0 +1,14 @@
+Todo:
+	Beeper when temperature is to high / low
+
+Bugs:
+	Temperature is written or read incorrectly. (converted_temp:float)
+	Timer is running to slow
+
+Not so important:
+	Don't update XLCD every iteration (less flashing).
+
+Nice to have:
+	Show Time in double digits (00:00:02)
+	Access EEPROM through buttons. (back and forwards).
+	Access EEPROM through serial interface
