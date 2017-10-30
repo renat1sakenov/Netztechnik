@@ -12,11 +12,6 @@
 #include "i2c.h"
 #include "timers.h"
 
-union INT
-{
-    int n;
-    unsigned char byte;
-};
 union FLOAT
 {
  float number;
@@ -31,7 +26,7 @@ int date_size = 3;
 unsigned char result[7];                        //result
 
 union FLOAT converted_temp;
-union INT msec,sec,min,hour;
+unsigned char msec,sec,min,hour = 0x00;
 
 
 /**
@@ -225,24 +220,24 @@ int write_data(unsigned char * temp, unsigned char * date)
     converted_temp.number = ((float)ReadADC() *100/255);
  }
  
- 
- void test_readwrite()
+ /**
+  * prints the value from "result" (temperature and time)
+  */
+void test_readwrite()
 {
-    /* TEST DATA
+     //if test data is needed, uncomment. writes 16.0f and 'abc' into the eeprom.
+    /* 
     union FLOAT funion;
     funion.number = 16.0f;
- 
     char test2[3] = {'a','b','c'};    
-    char tmp_str2[5];
-    int ret2 = write_data(funion.bytes,test2);
-    sprintf(tmp_str2,"%d",ret2);
-    putsXLCD(tmp_str2);
-    
+    write_data(funion.bytes,test2);
     __delay_ms(1000);
     */ 
     initXLCD();
-
-    read_data();
+    putsXLCD("MEM TEST");
+    __delay_ms(2000);
+    initXLCD();
+    
     int j = 0;
     union FLOAT funion2;
     for(; j<4; j++)
@@ -251,24 +246,28 @@ int write_data(unsigned char * temp, unsigned char * date)
     char temp[4];
     sprintf(temp,"%f",funion2.number);
     
-    union INT time[3];
+    unsigned char time[3];
     for(; j<7; j++)
-        time[j-4].byte = result[j];
+        time[j-4] = result[j];
     
     putsXLCD(temp);
     __delay_ms(1000);
-    Nop();
     initXLCD();
-    char str_temp2[10];
-    sprintf(str_temp2,"%d:%d:%d",time[0].n,time[1].n,time[2].n);
+    unsigned char str_temp2[3];
+    sprintf(str_temp2,"%d:%d:%d",time[0],time[1],time[2]);
     putsXLCD(str_temp2);
+    
     __delay_ms(1000);
+    initXLCD();
+    putsXLCD("END TEST");
+    __delay_ms(1000);  
 }
  
 /*
  * 
  */
-int main() {
+int main() 
+{
     __delay_ms(100);
     LATA = 0xFF;
     LATB = 0xFF;
@@ -288,19 +287,19 @@ int main() {
         if(PIR1bits.TMR1IF=1)
         {
             initXLCD();
-            msec.n++;
-            if(msec.n>=10)
+            msec++;
+            if(msec>=10)
             {
-                sec.n++;
-                msec.n=0;
-                if(sec.n>=60)
+                sec++;
+                msec=0;
+                if(sec>=60)
                 {
-                    min.n++;
-                    sec.n=0;
-                    if(min.n>=60)
+                    min++;
+                    sec=0;
+                    if(min>=60)
                     {
-                        hour.n++;
-                        min.n=0;
+                        hour++;
+                        min=0;
                         /*if(hour>=24)
                         {
                             hour=0;
@@ -309,22 +308,25 @@ int main() {
                 }
             }            
             read_temperature();  
-            sprintf(time, "%d:%d:%d", hour.n,min.n,sec.n);
+            sprintf(time, "%d:%d:%d", hour,min,sec);
             sprintf(str_tmp, "%.2f %s",converted_temp.number, time);
             putsXLCD(str_tmp);
             
-            if(min.n % 2 == 0 && sec.n == 0)
+            //save the data every 2 minutes
+            if(min % 2 == 0 && sec == 0 && msec == 1)
             {
                 unsigned char date[3];
-                date[0] = hour.byte;
-                date[1] = min.byte;
-                date[2] = sec.byte;
+                date[0] = hour;
+                date[1] = min;
+                date[2] = sec;
                 write_data(converted_temp.bytes,date);
                 
-                initXLCD();
-                putsXLCD("MEM TEST");
-                __delay_ms(2000);
+                //testing 
+                /* 
+                __delay_ms(100);
+                read_data();
                 test_readwrite();
+                */
             }   
         }
     }
