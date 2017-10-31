@@ -3,10 +3,13 @@ Todo:
 
 Bugs:
 	Temperature is written or read incorrectly. (converted_temp:float)
+		- 2nd Byte is always wrong! e.g. switches from 0x96 to 0x92 after write/read
 	Timer is running to slow
 
 Not so important:
 	Don't update XLCD every iteration (less flashing).
+	use different format.  hour,min,sec (3 Bytes) -> max of 256 hours = ~11 days
+		use unsigned long (4 Bytes) for seconds -> 2^32 sec -> 136 years	
 
 Nice to have:
 	Show Time in double digits (00:00:02)

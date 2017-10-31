@@ -15,15 +15,15 @@
 union FLOAT
 {
  float number;
- unsigned char bytes[4];
+ unsigned char bytes[3];
 };
 
 char eeprom_laddress = 0x00;
 char eeprom_haddress = 0x00;
-int block_size = 7;                 //4 bytes for temperature, 3 bytes for date
-int temp_size = 4;
-int date_size = 3;
-unsigned char result[7];                        //result
+int block_size = 6;                 //3 bytes for temperature, 3 bytes for date
+int temp_size = 3;
+int time_size = 3;
+unsigned char result[6];                        //result
 
 union FLOAT converted_temp;
 unsigned char msec,sec,min,hour = 0x00;
@@ -128,7 +128,7 @@ void initTimer(void)
     unsigned char timer_config1=0x00;
     unsigned char timer_config2=0x00;
     unsigned int timer_value=0x00;
-    timer_config1 = T1_16BIT_RW | T1_SOURCE_EXT | T1_PS_1_2| T1_OSC1EN_OFF | T1_SYNC_EXT_OFF | TIMER_INT_ON;
+    timer_config1 = T1_16BIT_RW & T1_SOURCE_EXT & T1_PS_1_2 & T1_OSC1EN_OFF & T1_SYNC_EXT_OFF & TIMER_INT_ON;
     OpenTimer1(timer_config1);
     WriteTimer1(timer_value);
 }
@@ -170,11 +170,11 @@ int write_one_block(unsigned char* d, int size)
 
 int write_data(unsigned char * temp, unsigned char * date)
 {
-     return write_one_block(temp,temp_size) + write_one_block(date,date_size);
+     return write_one_block(temp,temp_size) + write_one_block(date,time_size);
 }
  
  /**
-  * Puts the last 7 Bytes from the eeprom into "result" 
+  * Puts the last 6 Bytes from the eeprom into "result" 
   * if there are none returns -1
   * @return 
   */
@@ -205,7 +205,7 @@ int write_data(unsigned char * temp, unsigned char * date)
              return -1;
          }
      }     
-     if(HDByteReadI2C(0xA0,tha,tla,result,7) == 0)
+     if(HDByteReadI2C(0xA0,tha,tla,result,block_size) == 0)
          return 0;
      else return -1;
  }
@@ -221,11 +221,34 @@ int write_data(unsigned char * temp, unsigned char * date)
  }
  
  /**
+  * print a formatted string from "result"
+  */
+ void print_data()
+ {
+    int j = 0;
+    union FLOAT funion2;
+    for(; j<3; j++)
+        funion2.bytes[j] = result[j];
+
+    char temp[3];
+    sprintf(temp,"%.2f",funion2.number);
+    
+    unsigned char time[3];
+    for(; j<6; j++)
+        time[j-3] = result[j];
+    
+    initXLCD();
+    unsigned char str_temp2[3];
+    sprintf(str_temp2,"%s %d:%d:%d",temp, time[0],time[1],time[2]);
+    putsXLCD(str_temp2);     
+ }
+ 
+ /**
   * prints the value from "result" (temperature and time)
   */
 void test_readwrite()
 {
-     //if test data is needed, uncomment. writes 16.0f and 'abc' into the eeprom.
+    //if test data is needed, uncomment. writes 16.0f and 'abc' into the eeprom.
     /* 
     union FLOAT funion;
     funion.number = 16.0f;
@@ -234,33 +257,50 @@ void test_readwrite()
     __delay_ms(1000);
     */ 
     initXLCD();
-    putsXLCD("MEM TEST");
+    putsXLCD("SHOW DATA");
     __delay_ms(2000);
     initXLCD();
     
-    int j = 0;
-    union FLOAT funion2;
-    for(; j<4; j++)
-        funion2.bytes[j] = result[j];
-
-    char temp[4];
-    sprintf(temp,"%f",funion2.number);
-    
-    unsigned char time[3];
-    for(; j<7; j++)
-        time[j-4] = result[j];
-    
-    putsXLCD(temp);
-    __delay_ms(1000);
-    initXLCD();
-    unsigned char str_temp2[3];
-    sprintf(str_temp2,"%d:%d:%d",time[0],time[1],time[2]);
-    putsXLCD(str_temp2);
+    print_data();
     
     __delay_ms(1000);
     initXLCD();
-    putsXLCD("END TEST");
+    putsXLCD("END");
     __delay_ms(1000);  
+}
+
+/**
+ * print all values from the eeprom
+ */
+void print_all_data()
+{
+    int pad_counter = 1;
+    int a = 0;
+    initXLCD();
+    putsXLCD("SHOW ALL DATA");
+    __delay_ms(500);
+    
+    while(1)
+    {
+        initXLCD();
+        for(;a < pad_counter; a ++)
+        {
+            if(read_data() == -1){
+                initXLCD();
+                putsXLCD("END");
+                __delay_ms(100);
+                return;
+            }
+        }
+        __delay_ms(10);
+        print_data();
+        __delay_ms(200);
+        initXLCD();
+        putsXLCD("NEXT");
+        __delay_ms(200);
+        pad_counter++;
+        a = 0;
+    }
 }
  
 /*
@@ -268,13 +308,11 @@ void test_readwrite()
  */
 int main() 
 {
-    __delay_ms(100);
     LATA = 0xFF;
     LATB = 0xFF;
     TRISC = 0xFF;
     SSPADD = 0x27;
     
-  
     initADC();
     initTimer();
     OpenI2C(MASTER, SLEW_OFF); 
@@ -286,7 +324,6 @@ int main()
     {
         if(PIR1bits.TMR1IF=1)
         {
-            initXLCD();
             msec++;
             if(msec>=10)
             {
@@ -300,13 +337,10 @@ int main()
                     {
                         hour++;
                         min=0;
-                        /*if(hour>=24)
-                        {
-                            hour=0;
-                        }*/
                     }
                 }
-            }            
+            }
+            initXLCD();
             read_temperature();  
             sprintf(time, "%d:%d:%d", hour,min,sec);
             sprintf(str_tmp, "%.2f %s",converted_temp.number, time);
@@ -319,14 +353,19 @@ int main()
                 date[0] = hour;
                 date[1] = min;
                 date[2] = sec;
-                write_data(converted_temp.bytes,date);
+                if(write_data(converted_temp.bytes,date) < 0)
+                {
+                    initXLCD();
+                    putsXLCD("memory full");
+                    __delay_ms(100);
+                }
                 
                 //testing 
-                /* 
+                
                 __delay_ms(100);
                 read_data();
                 test_readwrite();
-                */
+                //print_all_data();
             }   
         }
     }
