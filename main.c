@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include "i2c.h"
 #include "timers.h"
+#include "pwm.h"
 
 union FLOAT
 {
@@ -26,6 +27,8 @@ int time_size = 3;
 unsigned char result[6];                        //result
 
 union FLOAT converted_temp;
+float max_temp = 18.5f;
+float min_temp = 18.0f;
 unsigned char msec,sec,min,hour = 0x00;
 
 
@@ -303,6 +306,18 @@ void print_all_data()
     }
 }
  
+
+void alarm (){
+    OpenPWM1(((100000/2.0f)/4)-1);
+    SetDCPWM1((100000/2.0f)/2);
+    SetOutputPWM1(SINGLE_OUT,PWM_MODE_1);
+    __delay_ms(1000);
+    ClosePWM1();
+    __delay_ms(100);
+    return;
+}
+
+
 /*
  * 
  */
@@ -345,7 +360,16 @@ int main()
             sprintf(time, "%d:%d:%d", hour,min,sec);
             sprintf(str_tmp, "%.2f %s",converted_temp.number, time);
             putsXLCD(str_tmp);
+    
+            //check every 30 sec for temperature
+            if((sec == 30 || sec == 0) && msec == 1)
+            {
+                if(converted_temp.number > max_temp || converted_temp.number < min_temp){
+                    alarm();alarm();alarm();
+                }
+            }
             
+         
             //save the data every 2 minutes
             if(min % 2 == 0 && sec == 0 && msec == 1)
             {
