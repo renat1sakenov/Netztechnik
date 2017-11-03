@@ -98,6 +98,10 @@
       <itemPath>t1open.c</itemPath>
       <itemPath>t1read.c</itemPath>
       <itemPath>t1write.c</itemPath>
+      <itemPath>pw1close.c</itemPath>
+      <itemPath>pw1open.c</itemPath>
+      <itemPath>pw1setdc.c</itemPath>
+      <itemPath>pw1setoc.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

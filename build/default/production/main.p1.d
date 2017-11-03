@@ -2,6 +2,7 @@
  build/default/production/main.p1:  \
  main.c  \
 ../../../../../../opt/microchip/xc8/v1.44/include/errno.h  \
+pwm.h  \
 ../../../../../../opt/microchip/xc8/v1.44/include/p18cxxx.h  \
 XLCD.H  \
 ../../../../../../opt/microchip/xc8/v1.44/include/htc.h  \

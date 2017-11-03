@@ -355,23 +355,10 @@ if(c != '%')
 continue;
 }
 
-
-width = 0;
-
+# 548
 flag = 0;
 
-# 597
-if(isdigit((unsigned)*f)) {
-width = 0;
-do {
-width *= 10;
-width += *f++ - '0';
-} while(isdigit((unsigned)*f));
-
-# 608
-}
-
-
+# 611
 if(*f == '.') {
 flag |= 0x4000;
 f++;
@@ -425,16 +412,7 @@ len++;
 if(prec && prec < len)
 len = prec;
 
-
-if(width > len)
-width -= len;
-else
-width = 0;
-
-# 764
-while(width--)
-((*sp++ = (' ')));
-
+# 767
 while(len--)
 ((*sp++ = (*cp++)));
 
@@ -509,29 +487,10 @@ for(c = 1 ; c != (sizeof dpowers/sizeof dpowers[0]) ; c++)
 if(val < dpowers[c])
 break;
 
-
-
-width -= prec + c + exp;
-if(
-
-# 1147
-prec)
-width--;
-if(flag & 0x03)
-width--;
-
 # 1175
 {
 
-# 1180
-while(width > 0) {
-((*sp++ = (' ')));
-width--;
-}
-
-
-
-
+# 1188
 if(flag & 0x03)
 
 ((*sp++ = ('-')));
@@ -611,33 +570,8 @@ c = prec;
 else if(prec < c)
 prec = c;
 
-
-if(width && flag & 0x03)
-width--;
-
-if(flag & 0x4000) {
-if(width > prec)
-width -= prec;
-else
-width = 0;
-}
-
-# 1381
-if(width > c)
-width -= c;
-else
-width = 0;
-
 # 1422
 {
-
-if(width
-
-# 1428
-)
-do
-((*sp++ = (' ')));
-while(--width);
 
 # 1438
 if(flag & 0x03)

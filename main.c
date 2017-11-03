@@ -131,7 +131,7 @@ void initTimer(void)
     unsigned char timer_config1=0x00;
     unsigned char timer_config2=0x00;
     unsigned int timer_value=0x00;
-    timer_config1 = T1_16BIT_RW & T1_SOURCE_EXT & T1_PS_1_2 & T1_OSC1EN_OFF & T1_SYNC_EXT_OFF & TIMER_INT_ON;
+    timer_config1 = T1_16BIT_RW & T1_SOURCE_EXT & T1_PS_1_2 & T1_OSC1EN_ON & T1_SYNC_EXT_OFF & TIMER_INT_ON;
     OpenTimer1(timer_config1);
     WriteTimer1(timer_value);
 }

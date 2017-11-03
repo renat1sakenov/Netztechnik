@@ -1,0 +1,1084 @@
+[p LITE_MODE AUTOSTATIC LFSROK EMI_WORD ]
+[d version 1.1 ]
+[d edition pro ]
+[d chip 18F4520 ]
+[d frameptr 4065 ]
+"8 /opt/microchip/xc8/v1.44/sources/common/awdiv.c
+[v ___awdiv __awdiv `(i  1 e 2 0 ]
+"8 /opt/microchip/xc8/v1.44/sources/common/awmod.c
+[v ___awmod __awmod `(i  1 e 2 0 ]
+"32 /opt/microchip/xc8/v1.44/sources/common/awtoft.c
+[v ___awtoft __awtoft `(f  1 e 3 0 ]
+"409 /opt/microchip/xc8/v1.44/sources/common/doprnt.c
+[v _fround fround `(d  1 s 3 fround ]
+"425
+[v _scale scale `(d  1 s 3 scale ]
+"492
+[v _sprintf sprintf `(i  1 e 2 0 ]
+"60 /opt/microchip/xc8/v1.44/sources/common/fldivl.c
+[v __div_to_l_ _div_to_l_ `(ul  1 e 4 0 ]
+"62 /opt/microchip/xc8/v1.44/sources/common/float.c
+[v ___ftpack __ftpack `(f  1 e 3 0 ]
+"86 /opt/microchip/xc8/v1.44/sources/common/ftadd.c
+[v ___ftadd __ftadd `(f  1 e 3 0 ]
+"54 /opt/microchip/xc8/v1.44/sources/common/ftdiv.c
+[v ___ftdiv __ftdiv `(f  1 e 3 0 ]
+"60 /opt/microchip/xc8/v1.44/sources/common/ftdivl.c
+[v __tdiv_to_l_ _tdiv_to_l_ `(ul  1 e 4 0 ]
+"4 /opt/microchip/xc8/v1.44/sources/common/ftge.c
+[v ___ftge __ftge `(b  1 e 0 0 ]
+"62 /opt/microchip/xc8/v1.44/sources/common/ftmul.c
+[v ___ftmul __ftmul `(f  1 e 3 0 ]
+"15 /opt/microchip/xc8/v1.44/sources/common/ftneg.c
+[v ___ftneg __ftneg `(f  1 e 3 0 ]
+"20 /opt/microchip/xc8/v1.44/sources/common/ftsub.c
+[v ___ftsub __ftsub `(f  1 e 3 0 ]
+"44 /opt/microchip/xc8/v1.44/sources/common/fttol.c
+[v ___fttol __fttol `(l  1 e 4 0 ]
+"8 /opt/microchip/xc8/v1.44/sources/common/isdigit.c
+[v _isdigit isdigit `(b  1 e 0 0 ]
+"8 /opt/microchip/xc8/v1.44/sources/common/lldiv.c
+[v ___lldiv __lldiv `(ul  1 e 4 0 ]
+"8 /opt/microchip/xc8/v1.44/sources/common/llmod.c
+[v ___llmod __llmod `(ul  1 e 4 0 ]
+"35 /opt/microchip/xc8/v1.44/sources/common/lltoft.c
+[v ___lltoft __lltoft `(f  1 e 3 0 ]
+"10 /opt/microchip/xc8/v1.44/sources/common/sprcadd.c
+[v ___fladd __fladd `(d  1 e 3 0 ]
+"245
+[v ___flsub __flsub `(d  1 e 3 0 ]
+"11 /opt/microchip/xc8/v1.44/sources/common/sprcdiv.c
+[v ___fldiv __fldiv `(d  1 e 3 0 ]
+"8 /opt/microchip/xc8/v1.44/sources/common/sprcmul.c
+[v ___flmul __flmul `(d  1 e 3 0 ]
+"15 /opt/microchip/xc8/v1.44/sources/common/Umul16.c
+[v ___wmul __wmul `(ui  1 e 2 0 ]
+"15 /opt/microchip/xc8/v1.44/sources/common/Umul32.c
+[v ___lmul __lmul `(ul  1 e 4 0 ]
+"8 /opt/microchip/xc8/v1.44/sources/pic18/d10ktcyx.c
+[v _Delay10KTCYx Delay10KTCYx `(v  1 e 1 0 ]
+"26 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/adcbusy.c
+[v _BusyADC BusyADC `(uc  1 e 1 0 ]
+"22 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/adcconv.c
+[v _ConvertADC ConvertADC `(v  1 e 1 0 ]
+"68 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/adcopen.c
+[v _OpenADC OpenADC `(v  1 e 1 0 ]
+"24 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/adcread.c
+[v _ReadADC ReadADC `(i  1 e 2 0 ]
+"12 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/busyxlcd.c
+[v _BusyXLCD BusyXLCD `(uc  1 e 1 0 ]
+"15 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/i2c_eeap.c
+[v _EEAckPolling EEAckPolling `(c  1 e 1 0 ]
+"17 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/i2c_gets.c
+[v _getsI2C getsI2C `(c  1 e 1 0 ]
+"24 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/i2c_idle.c
+[v _IdleI2C IdleI2C `(v  1 e 1 0 ]
+"14 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/i2c_open.c
+[v _OpenI2C OpenI2C `(v  1 e 1 0 ]
+"19 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/i2c_puts.c
+[v _putsI2C putsI2C `(c  1 e 1 0 ]
+"11 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/i2c_read.c
+[v _ReadI2C ReadI2C `(uc  1 e 1 0 ]
+"12 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/i2c_writ.c
+[v _WriteI2C WriteI2C `(c  1 e 1 0 ]
+"43 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/main.c
+[v _HDByteWriteI2C HDByteWriteI2C `(uc  1 e 1 0 ]
+"72
+[v _HDByteReadI2C HDByteReadI2C `(uc  1 e 1 0 ]
+"96
+[v _DelayFor18TCY DelayFor18TCY `(v  1 e 1 0 ]
+"101
+[v _DelayPORXLCD DelayPORXLCD `(v  1 e 1 0 ]
+"111
+[v _initXLCD initXLCD `(v  1 e 1 0 ]
+"119
+[v _initADC initADC `(v  1 e 1 0 ]
+"129
+[v _initTimer initTimer `(v  1 e 1 0 ]
+"146
+[v _write_one_block write_one_block `(i  1 e 2 0 ]
+"174
+[v _write_data write_data `(i  1 e 2 0 ]
+"184
+[v _read_data read_data `(i  1 e 2 0 ]
+"219
+[v _read_temperature read_temperature `(v  1 e 1 0 ]
+"229
+[v _print_data print_data `(v  1 e 1 0 ]
+"252
+[v _test_readwrite test_readwrite `(v  1 e 1 0 ]
+"310
+[v _alarm alarm `(v  1 e 1 0 ]
+"324
+[v _main main `(i  1 e 2 0 ]
+"20 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/openxlcd.c
+[v _OpenXLCD OpenXLCD `(v  1 e 1 0 ]
+"16 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/putsxlcd.c
+[v _putsXLCD putsXLCD `(v  1 e 1 0 ]
+"7 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/pw1close.c
+[v _ClosePWM1 ClosePWM1 `(v  1 e 1 0 ]
+"8 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/pw1open.c
+[v _OpenPWM1 OpenPWM1 `(v  1 e 1 0 ]
+"7 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/pw1setdc.c
+[v _SetDCPWM1 SetDCPWM1 `(v  1 e 1 0 ]
+"22 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/pw1setoc.c
+[v _SetOutputPWM1 SetOutputPWM1 `(v  1 e 1 0 ]
+"14 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/setddram.c
+[v _SetDDRamAddr SetDDRamAddr `(v  1 e 1 0 ]
+"16 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/t1open.c
+[v _OpenTimer1 OpenTimer1 `(v  1 e 1 0 ]
+"14 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/t1write.c
+[v _WriteTimer1 WriteTimer1 `(v  1 e 1 0 ]
+"14 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/wcmdxlcd.c
+[v _WriteCmdXLCD WriteCmdXLCD `(v  1 e 1 0 ]
+"17 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/writdata.c
+[v _WriteDataXLCD WriteDataXLCD `(v  1 e 1 0 ]
+"269 /opt/microchip/xc8/v1.44/include/pic18f4520.h
+[v _PORTB PORTB `VEuc  1 e 1 @3969 ]
+"975
+[v _LATA LATA `VEuc  1 e 1 @3977 ]
+[s S21 . 1 `uc 1 LATA0 1 0 :1:0 
+`uc 1 LATA1 1 0 :1:1 
+`uc 1 LATA2 1 0 :1:2 
+`uc 1 LATA3 1 0 :1:3 
+`uc 1 LATA4 1 0 :1:4 
+`uc 1 LATA5 1 0 :1:5 
+`uc 1 LATA6 1 0 :1:6 
+`uc 1 LATA7 1 0 :1:7 
+]
+"1002
+[s S30 . 1 `uc 1 LA0 1 0 :1:0 
+`uc 1 LA1 1 0 :1:1 
+`uc 1 LA2 1 0 :1:2 
+`uc 1 LA3 1 0 :1:3 
+`uc 1 LA4 1 0 :1:4 
+`uc 1 LA5 1 0 :1:5 
+`uc 1 LA6 1 0 :1:6 
+`uc 1 LA7 1 0 :1:7 
+]
+[u S39 . 1 `S21 1 . 1 0 `S30 1 . 1 0 ]
+[v _LATAbits LATAbits `VES39  1 e 1 @3977 ]
+"1087
+[v _LATB LATB `VEuc  1 e 1 @3978 ]
+[s S151 . 1 `uc 1 TRISA0 1 0 :1:0 
+`uc 1 TRISA1 1 0 :1:1 
+`uc 1 TRISA2 1 0 :1:2 
+`uc 1 TRISA3 1 0 :1:3 
+`uc 1 TRISA4 1 0 :1:4 
+`uc 1 TRISA5 1 0 :1:5 
+`uc 1 TRISA6 1 0 :1:6 
+`uc 1 TRISA7 1 0 :1:7 
+]
+"1507
+[s S160 . 1 `uc 1 RA0 1 0 :1:0 
+`uc 1 RA1 1 0 :1:1 
+`uc 1 RA2 1 0 :1:2 
+`uc 1 RA3 1 0 :1:3 
+`uc 1 RA4 1 0 :1:4 
+`uc 1 RA5 1 0 :1:5 
+`uc 1 RA6 1 0 :1:6 
+`uc 1 RA7 1 0 :1:7 
+]
+[u S169 . 1 `S151 1 . 1 0 `S160 1 . 1 0 ]
+[v _TRISAbits TRISAbits `VES169  1 e 1 @3986 ]
+"1697
+[v _TRISB TRISB `VEuc  1 e 1 @3987 ]
+"1919
+[v _TRISC TRISC `VEuc  1 e 1 @3988 ]
+[s S1616 . 1 `uc 1 TRISC0 1 0 :1:0 
+`uc 1 TRISC1 1 0 :1:1 
+`uc 1 TRISC2 1 0 :1:2 
+`uc 1 TRISC3 1 0 :1:3 
+`uc 1 TRISC4 1 0 :1:4 
+`uc 1 TRISC5 1 0 :1:5 
+`uc 1 TRISC6 1 0 :1:6 
+`uc 1 TRISC7 1 0 :1:7 
+]
+"1951
+[s S1625 . 1 `uc 1 RC0 1 0 :1:0 
+`uc 1 RC1 1 0 :1:1 
+`uc 1 RC2 1 0 :1:2 
+`uc 1 RC3 1 0 :1:3 
+`uc 1 RC4 1 0 :1:4 
+`uc 1 RC5 1 0 :1:5 
+`uc 1 RC6 1 0 :1:6 
+`uc 1 RC7 1 0 :1:7 
+]
+[u S1634 . 1 `S1616 1 . 1 0 `S1625 1 . 1 0 ]
+[v _TRISCbits TRISCbits `VES1634  1 e 1 @3988 ]
+[s S2347 . 1 `uc 1 TRISD0 1 0 :1:0 
+`uc 1 TRISD1 1 0 :1:1 
+`uc 1 TRISD2 1 0 :1:2 
+`uc 1 TRISD3 1 0 :1:3 
+`uc 1 TRISD4 1 0 :1:4 
+`uc 1 TRISD5 1 0 :1:5 
+`uc 1 TRISD6 1 0 :1:6 
+`uc 1 TRISD7 1 0 :1:7 
+]
+"2173
+[s S2356 . 1 `uc 1 RD0 1 0 :1:0 
+`uc 1 RD1 1 0 :1:1 
+`uc 1 RD2 1 0 :1:2 
+`uc 1 RD3 1 0 :1:3 
+`uc 1 RD4 1 0 :1:4 
+`uc 1 RD5 1 0 :1:5 
+`uc 1 RD6 1 0 :1:6 
+`uc 1 RD7 1 0 :1:7 
+]
+[u S2365 . 1 `S2347 1 . 1 0 `S2356 1 . 1 0 ]
+[v _TRISDbits TRISDbits `VES2365  1 e 1 @3989 ]
+[s S768 . 1 `uc 1 TMR1IE 1 0 :1:0 
+`uc 1 TMR2IE 1 0 :1:1 
+`uc 1 CCP1IE 1 0 :1:2 
+`uc 1 SSPIE 1 0 :1:3 
+`uc 1 TXIE 1 0 :1:4 
+`uc 1 RCIE 1 0 :1:5 
+`uc 1 ADIE 1 0 :1:6 
+`uc 1 PSPIE 1 0 :1:7 
+]
+"2614
+[s S777 . 1 `uc 1 . 1 0 :4:0 
+`uc 1 TX1IE 1 0 :1:4 
+`uc 1 RC1IE 1 0 :1:5 
+]
+[u S781 . 1 `S768 1 . 1 0 `S777 1 . 1 0 ]
+[v _PIE1bits PIE1bits `VES781  1 e 1 @3997 ]
+[s S261 . 1 `uc 1 TMR1IF 1 0 :1:0 
+`uc 1 TMR2IF 1 0 :1:1 
+`uc 1 CCP1IF 1 0 :1:2 
+`uc 1 SSPIF 1 0 :1:3 
+`uc 1 TXIF 1 0 :1:4 
+`uc 1 RCIF 1 0 :1:5 
+`uc 1 ADIF 1 0 :1:6 
+`uc 1 PSPIF 1 0 :1:7 
+]
+"2691
+[s S270 . 1 `uc 1 . 1 0 :4:0 
+`uc 1 TX1IF 1 0 :1:4 
+`uc 1 RC1IF 1 0 :1:5 
+]
+[u S274 . 1 `S261 1 . 1 0 `S270 1 . 1 0 ]
+[v _PIR1bits PIR1bits `VES274  1 e 1 @3998 ]
+[s S1216 . 1 `uc 1 CCP2IF 1 0 :1:0 
+`uc 1 TMR3IF 1 0 :1:1 
+`uc 1 HLVDIF 1 0 :1:2 
+`uc 1 BCLIF 1 0 :1:3 
+`uc 1 EEIF 1 0 :1:4 
+`uc 1 . 1 0 :1:5 
+`uc 1 CMIF 1 0 :1:6 
+`uc 1 OSCFIF 1 0 :1:7 
+]
+"2910
+[s S1225 . 1 `uc 1 . 1 0 :2:0 
+`uc 1 LVDIF 1 0 :1:2 
+]
+[u S1228 . 1 `S1216 1 . 1 0 `S1225 1 . 1 0 ]
+[v _PIR2bits PIR2bits `VES1228  1 e 1 @4001 ]
+"4499
+[v _CCP1CON CCP1CON `VEuc  1 e 1 @4029 ]
+"4603
+[v _CCPR1L CCPR1L `VEuc  1 e 1 @4030 ]
+"4617
+[v _ADCON2 ADCON2 `VEuc  1 e 1 @4032 ]
+"4688
+[v _ADCON1 ADCON1 `VEuc  1 e 1 @4033 ]
+"4773
+[v _ADCON0 ADCON0 `VEuc  1 e 1 @4034 ]
+[s S654 . 1 `uc 1 . 1 0 :1:0 
+`uc 1 GO_NOT_DONE 1 0 :1:1 
+]
+"4817
+[s S657 . 1 `uc 1 ADON 1 0 :1:0 
+`uc 1 GO_nDONE 1 0 :1:1 
+`uc 1 CHS 1 0 :4:2 
+]
+[s S661 . 1 `uc 1 . 1 0 :1:0 
+`uc 1 GO 1 0 :1:1 
+`uc 1 CHS0 1 0 :1:2 
+`uc 1 CHS1 1 0 :1:3 
+`uc 1 CHS2 1 0 :1:4 
+`uc 1 CHS3 1 0 :1:5 
+]
+[s S668 . 1 `uc 1 . 1 0 :1:0 
+`uc 1 DONE 1 0 :1:1 
+]
+[s S671 . 1 `uc 1 . 1 0 :1:0 
+`uc 1 NOT_DONE 1 0 :1:1 
+]
+[s S674 . 1 `uc 1 . 1 0 :1:0 
+`uc 1 nDONE 1 0 :1:1 
+]
+[s S677 . 1 `uc 1 . 1 0 :1:0 
+`uc 1 GO_DONE 1 0 :1:1 
+]
+[s S680 . 1 `uc 1 . 1 0 :1:0 
+`uc 1 GODONE 1 0 :1:1 
+]
+[u S683 . 1 `S654 1 . 1 0 `S657 1 . 1 0 `S661 1 . 1 0 `S668 1 . 1 0 `S671 1 . 1 0 `S674 1 . 1 0 `S677 1 . 1 0 `S680 1 . 1 0 ]
+[v _ADCON0bits ADCON0bits `VES683  1 e 1 @4034 ]
+"4899
+[v _ADRESL ADRESL `VEuc  1 e 1 @4035 ]
+"4906
+[v _ADRESH ADRESH `VEuc  1 e 1 @4036 ]
+"4913
+[v _SSPCON2 SSPCON2 `VEuc  1 e 1 @4037 ]
+[s S82 . 1 `uc 1 SEN 1 0 :1:0 
+`uc 1 RSEN 1 0 :1:1 
+`uc 1 PEN 1 0 :1:2 
+`uc 1 RCEN 1 0 :1:3 
+`uc 1 ACKEN 1 0 :1:4 
+`uc 1 ACKDT 1 0 :1:5 
+`uc 1 ACKSTAT 1 0 :1:6 
+`uc 1 GCEN 1 0 :1:7 
+]
+"4938
+[s S91 . 1 `uc 1 . 1 0 :1:0 
+`uc 1 ADMSK1 1 0 :1:1 
+`uc 1 ADMSK2 1 0 :1:2 
+`uc 1 ADMSK3 1 0 :1:3 
+`uc 1 ADMSK4 1 0 :1:4 
+`uc 1 ADMSK5 1 0 :1:5 
+]
+[u S98 . 1 `S82 1 . 1 0 `S91 1 . 1 0 ]
+[v _SSPCON2bits SSPCON2bits `VES98  1 e 1 @4037 ]
+"5008
+[v _SSPCON1 SSPCON1 `VEuc  1 e 1 @4038 ]
+[s S1667 . 1 `uc 1 SSPM 1 0 :4:0 
+`uc 1 CKP 1 0 :1:4 
+`uc 1 SSPEN 1 0 :1:5 
+`uc 1 SSPOV 1 0 :1:6 
+`uc 1 WCOL 1 0 :1:7 
+]
+"5028
+[s S1673 . 1 `uc 1 SSPM0 1 0 :1:0 
+`uc 1 SSPM1 1 0 :1:1 
+`uc 1 SSPM2 1 0 :1:2 
+`uc 1 SSPM3 1 0 :1:3 
+]
+[u S1678 . 1 `S1667 1 . 1 0 `S1673 1 . 1 0 ]
+[v _SSPCON1bits SSPCON1bits `VES1678  1 e 1 @4038 ]
+"5078
+[v _SSPSTAT SSPSTAT `VEuc  1 e 1 @4039 ]
+[s S1058 . 1 `uc 1 . 1 0 :2:0 
+`uc 1 R_NOT_W 1 0 :1:2 
+]
+"5154
+[s S1061 . 1 `uc 1 . 1 0 :5:0 
+`uc 1 D_NOT_A 1 0 :1:5 
+]
+[s S1064 . 1 `uc 1 BF 1 0 :1:0 
+`uc 1 UA 1 0 :1:1 
+`uc 1 R_nW 1 0 :1:2 
+`uc 1 S 1 0 :1:3 
+`uc 1 P 1 0 :1:4 
+`uc 1 D_nA 1 0 :1:5 
+`uc 1 CKE 1 0 :1:6 
+`uc 1 SMP 1 0 :1:7 
+]
+[s S1073 . 1 `uc 1 . 1 0 :2:0 
+`uc 1 R 1 0 :1:2 
+`uc 1 . 1 0 :2:3 
+`uc 1 D 1 0 :1:5 
+]
+[s S1078 . 1 `uc 1 . 1 0 :2:0 
+`uc 1 W 1 0 :1:2 
+`uc 1 . 1 0 :2:3 
+`uc 1 A 1 0 :1:5 
+]
+[s S1083 . 1 `uc 1 . 1 0 :2:0 
+`uc 1 nW 1 0 :1:2 
+`uc 1 . 1 0 :2:3 
+`uc 1 nA 1 0 :1:5 
+]
+[s S1088 . 1 `uc 1 . 1 0 :2:0 
+`uc 1 R_W 1 0 :1:2 
+`uc 1 . 1 0 :2:3 
+`uc 1 D_A 1 0 :1:5 
+]
+[s S1093 . 1 `uc 1 . 1 0 :2:0 
+`uc 1 NOT_WRITE 1 0 :1:2 
+]
+[s S1096 . 1 `uc 1 . 1 0 :5:0 
+`uc 1 NOT_ADDRESS 1 0 :1:5 
+]
+[s S1099 . 1 `uc 1 . 1 0 :2:0 
+`uc 1 nWRITE 1 0 :1:2 
+`uc 1 . 1 0 :2:3 
+`uc 1 nADDRESS 1 0 :1:5 
+]
+[s S1104 . 1 `uc 1 . 1 0 :2:0 
+`uc 1 RW 1 0 :1:2 
+`uc 1 START 1 0 :1:3 
+`uc 1 STOP 1 0 :1:4 
+`uc 1 DA 1 0 :1:5 
+]
+[s S1110 . 1 `uc 1 . 1 0 :2:0 
+`uc 1 NOT_W 1 0 :1:2 
+`uc 1 . 1 0 :2:3 
+`uc 1 NOT_A 1 0 :1:5 
+]
+[u S1115 . 1 `S1058 1 . 1 0 `S1061 1 . 1 0 `S1064 1 . 1 0 `S1073 1 . 1 0 `S1078 1 . 1 0 `S1083 1 . 1 0 `S1088 1 . 1 0 `S1093 1 . 1 0 `S1096 1 . 1 0 `S1099 1 . 1 0 `S1104 1 . 1 0 `S1110 1 . 1 0 ]
+[v _SSPSTATbits SSPSTATbits `VES1115  1 e 1 @4039 ]
+"5299
+[v _SSPADD SSPADD `VEuc  1 e 1 @4040 ]
+"5306
+[v _SSPBUF SSPBUF `VEuc  1 e 1 @4041 ]
+[s S2266 . 1 `uc 1 T2CKPS 1 0 :2:0 
+`uc 1 TMR2ON 1 0 :1:2 
+`uc 1 T2OUTPS 1 0 :4:3 
+]
+"5341
+[s S2270 . 1 `uc 1 T2CKPS0 1 0 :1:0 
+`uc 1 T2CKPS1 1 0 :1:1 
+`uc 1 . 1 0 :1:2 
+`uc 1 T2OUTPS0 1 0 :1:3 
+`uc 1 T2OUTPS1 1 0 :1:4 
+`uc 1 T2OUTPS2 1 0 :1:5 
+`uc 1 T2OUTPS3 1 0 :1:6 
+]
+[s S2278 . 1 `uc 1 . 1 0 :3:0 
+`uc 1 TOUTPS0 1 0 :1:3 
+`uc 1 TOUTPS1 1 0 :1:4 
+`uc 1 TOUTPS2 1 0 :1:5 
+`uc 1 TOUTPS3 1 0 :1:6 
+]
+[u S2284 . 1 `S2266 1 . 1 0 `S2270 1 . 1 0 `S2278 1 . 1 0 ]
+[v _T2CONbits T2CONbits `VES2284  1 e 1 @4042 ]
+"5411
+[v _PR2 PR2 `VEuc  1 e 1 @4043 ]
+"5528
+[v _T1CON T1CON `VEuc  1 e 1 @4045 ]
+[s S2080 . 1 `uc 1 . 1 0 :2:0 
+`uc 1 NOT_T1SYNC 1 0 :1:2 
+]
+"5561
+[s S2083 . 1 `uc 1 TMR1ON 1 0 :1:0 
+`uc 1 TMR1CS 1 0 :1:1 
+`uc 1 nT1SYNC 1 0 :1:2 
+`uc 1 T1OSCEN 1 0 :1:3 
+`uc 1 T1CKPS 1 0 :2:4 
+`uc 1 T1RUN 1 0 :1:6 
+`uc 1 RD16 1 0 :1:7 
+]
+[s S2091 . 1 `uc 1 . 1 0 :2:0 
+`uc 1 T1SYNC 1 0 :1:2 
+`uc 1 . 1 0 :1:3 
+`uc 1 T1CKPS0 1 0 :1:4 
+`uc 1 T1CKPS1 1 0 :1:5 
+]
+[s S2097 . 1 `uc 1 . 1 0 :3:0 
+`uc 1 SOSCEN 1 0 :1:3 
+`uc 1 . 1 0 :3:4 
+`uc 1 T1RD16 1 0 :1:7 
+]
+[u S2102 . 1 `S2080 1 . 1 0 `S2083 1 . 1 0 `S2091 1 . 1 0 `S2097 1 . 1 0 ]
+[v _T1CONbits T1CONbits `VES2102  1 e 1 @4045 ]
+"5638
+[v _TMR1L TMR1L `VEuc  1 e 1 @4046 ]
+"5645
+[v _TMR1H TMR1H `VEuc  1 e 1 @4047 ]
+[s S887 . 1 `uc 1 RBIF 1 0 :1:0 
+`uc 1 INT0IF 1 0 :1:1 
+`uc 1 TMR0IF 1 0 :1:2 
+`uc 1 RBIE 1 0 :1:3 
+`uc 1 INT0IE 1 0 :1:4 
+`uc 1 TMR0IE 1 0 :1:5 
+`uc 1 PEIE_GIEL 1 0 :1:6 
+`uc 1 GIE_GIEH 1 0 :1:7 
+]
+"6722
+[s S896 . 1 `uc 1 . 1 0 :1:0 
+`uc 1 INT0F 1 0 :1:1 
+`uc 1 T0IF 1 0 :1:2 
+`uc 1 . 1 0 :1:3 
+`uc 1 INT0E 1 0 :1:4 
+`uc 1 T0IE 1 0 :1:5 
+`uc 1 PEIE 1 0 :1:6 
+`uc 1 GIE 1 0 :1:7 
+]
+[s S905 . 1 `uc 1 . 1 0 :6:0 
+`uc 1 GIEL 1 0 :1:6 
+`uc 1 GIEH 1 0 :1:7 
+]
+[u S909 . 1 `S887 1 . 1 0 `S896 1 . 1 0 `S905 1 . 1 0 ]
+[v _INTCONbits INTCONbits `VES909  1 e 1 @4082 ]
+"354 /opt/microchip/xc8/v1.44/sources/common/doprnt.c
+[v _dpowers dpowers `C[10]ul  1 s 40 dpowers ]
+"7 /opt/microchip/xc8/v1.44/sources/common/powers.c
+[v __powers_ _powers_ `C[13]d  1 e 39 0 ]
+"39
+[v __npowers_ _npowers_ `C[13]d  1 e 39 0 ]
+"22 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/main.c
+[v _eeprom_laddress eeprom_laddress `uc  1 e 1 0 ]
+"23
+[v _eeprom_haddress eeprom_haddress `uc  1 e 1 0 ]
+"24
+[v _block_size block_size `i  1 e 2 0 ]
+"25
+[v _temp_size temp_size `i  1 e 2 0 ]
+"26
+[v _time_size time_size `i  1 e 2 0 ]
+"27
+[v _result result `[6]uc  1 e 6 0 ]
+[u S75 FLOAT 3 `f 1 number 3 0 `[3]uc 1 bytes 3 0 ]
+"29
+[v _converted_temp converted_temp `S75  1 e 3 0 ]
+"30
+[v _max_temp max_temp `f  1 e 3 0 ]
+"31
+[v _min_temp min_temp `f  1 e 3 0 ]
+"32
+[v _msec msec `uc  1 e 1 0 ]
+[v _sec sec `uc  1 e 1 0 ]
+[v _min min `uc  1 e 1 0 ]
+[v _hour hour `uc  1 e 1 0 ]
+"324
+[v _main main `(i  1 e 2 0 ]
+{
+"376
+[v main@date date `[3]uc  1 a 3 32 ]
+"336
+[v main@time time `[20]uc  1 a 20 2 ]
+"335
+[v main@str_tmp str_tmp `[10]uc  1 a 10 22 ]
+"396
+} 0
+"174
+[v _write_data write_data `(i  1 e 2 0 ]
+{
+[v write_data@temp temp `*.39uc  1 p 2 14 ]
+[v write_data@date date `*.39uc  1 p 2 16 ]
+"177
+} 0
+"146
+[v _write_one_block write_one_block `(i  1 e 2 0 ]
+{
+"148
+[v write_one_block@i i `i  1 a 2 12 ]
+"146
+[v write_one_block@d d `*.39uc  1 p 2 7 ]
+[v write_one_block@size size `i  1 p 2 9 ]
+"172
+} 0
+"43
+[v _HDByteWriteI2C HDByteWriteI2C `(uc  1 e 1 0 ]
+{
+[v HDByteWriteI2C@ControlByte ControlByte `uc  1 a 1 wreg ]
+[v HDByteWriteI2C@ControlByte ControlByte `uc  1 a 1 wreg ]
+[v HDByteWriteI2C@HighAdd HighAdd `uc  1 p 1 3 ]
+[v HDByteWriteI2C@LowAdd LowAdd `uc  1 p 1 4 ]
+[v HDByteWriteI2C@data data `uc  1 p 1 5 ]
+"45
+[v HDByteWriteI2C@ControlByte ControlByte `uc  1 a 1 6 ]
+"60
+} 0
+"15 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/i2c_eeap.c
+[v _EEAckPolling EEAckPolling `(c  1 e 1 0 ]
+{
+[v EEAckPolling@control control `uc  1 a 1 wreg ]
+[v EEAckPolling@control control `uc  1 a 1 wreg ]
+"17
+[v EEAckPolling@control control `uc  1 a 1 2 ]
+"57
+} 0
+"252 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/main.c
+[v _test_readwrite test_readwrite `(v  1 e 1 0 ]
+{
+"273
+} 0
+"229
+[v _print_data print_data `(v  1 e 1 0 ]
+{
+"244
+[v print_data@str_temp2 str_temp2 `[3]uc  1 a 3 121 ]
+"236
+[v print_data@temp temp `[3]uc  1 a 3 118 ]
+"239
+[v print_data@time time `[3]uc  1 a 3 112 ]
+[u S75 FLOAT 3 `f 1 number 3 0 `[3]uc 1 bytes 3 0 ]
+"232
+[v print_data@funion2 funion2 `S75  1 a 3 115 ]
+"231
+[v print_data@j j `i  1 a 2 124 ]
+"247
+} 0
+"492 /opt/microchip/xc8/v1.44/sources/common/doprnt.c
+[v _sprintf sprintf `(i  1 e 2 0 ]
+{
+"528
+[v sprintf@val val `ul  1 a 4 98 ]
+[u S2443 . 4 `ul 1 vd 4 0 `d 1 integ 3 0 ]
+"526
+[v sprintf@tmpval tmpval `S2443  1 a 4 94 ]
+"516
+[v sprintf@fval fval `d  1 a 3 102 ]
+"504
+[v sprintf@prec prec `i  1 a 2 105 ]
+"516
+[v sprintf@exp exp `i  1 a 2 92 ]
+"508
+[v sprintf@flag flag `us  1 a 2 90 ]
+"494
+[v sprintf@ap ap `[1]*.39v  1 a 2 88 ]
+"530
+[v sprintf@cp cp `*.35Cuc  1 a 2 86 ]
+"529
+[v sprintf@len len `ui  1 a 2 84 ]
+"499
+[v sprintf@c c `c  1 a 1 107 ]
+"492
+[v sprintf@sp sp `*.39uc  1 p 2 63 ]
+[v sprintf@f f `*.25Cuc  1 p 2 65 ]
+"1541
+} 0
+"425
+[v _scale scale `(d  1 s 3 scale ]
+{
+[v scale@scl scl `c  1 a 1 wreg ]
+[v scale@scl scl `c  1 a 1 wreg ]
+"428
+[v scale@scl scl `c  1 a 1 41 ]
+"441
+} 0
+"8 /opt/microchip/xc8/v1.44/sources/common/isdigit.c
+[v _isdigit isdigit `(b  1 e 0 0 ]
+{
+[v isdigit@c c `uc  1 a 1 wreg ]
+[v isdigit@c c `uc  1 a 1 wreg ]
+"14
+[v isdigit@c c `uc  1 a 1 2 ]
+"15
+} 0
+"409 /opt/microchip/xc8/v1.44/sources/common/doprnt.c
+[v _fround fround `(d  1 s 3 fround ]
+{
+[v fround@prec prec `uc  1 a 1 wreg ]
+[v fround@prec prec `uc  1 a 1 wreg ]
+"413
+[v fround@prec prec `uc  1 a 1 44 ]
+"418
+} 0
+"15 /opt/microchip/xc8/v1.44/sources/common/Umul16.c
+[v ___wmul __wmul `(ui  1 e 2 0 ]
+{
+"17
+[v ___wmul@product product `ui  1 a 2 18 ]
+"15
+[v ___wmul@multiplier multiplier `ui  1 p 2 14 ]
+[v ___wmul@multiplicand multiplicand `ui  1 p 2 16 ]
+"53
+} 0
+"8 /opt/microchip/xc8/v1.44/sources/common/awmod.c
+[v ___awmod __awmod `(i  1 e 2 0 ]
+{
+"11
+[v ___awmod@sign sign `uc  1 a 1 5 ]
+[v ___awmod@counter counter `uc  1 a 1 4 ]
+"8
+[v ___awmod@dividend dividend `i  1 p 2 0 ]
+[v ___awmod@divisor divisor `i  1 p 2 2 ]
+"35
+} 0
+"8 /opt/microchip/xc8/v1.44/sources/common/awdiv.c
+[v ___awdiv __awdiv `(i  1 e 2 0 ]
+{
+"11
+[v ___awdiv@quotient quotient `i  1 a 2 12 ]
+"12
+[v ___awdiv@sign sign `uc  1 a 1 11 ]
+[v ___awdiv@counter counter `uc  1 a 1 10 ]
+"8
+[v ___awdiv@dividend dividend `i  1 p 2 6 ]
+[v ___awdiv@divisor divisor `i  1 p 2 8 ]
+"42
+} 0
+"60 /opt/microchip/xc8/v1.44/sources/common/ftdivl.c
+[v __tdiv_to_l_ _tdiv_to_l_ `(ul  1 e 4 0 ]
+{
+"63
+[v __tdiv_to_l_@quot quot `ul  1 a 4 9 ]
+"62
+[v __tdiv_to_l_@exp1 exp1 `uc  1 a 1 14 ]
+[v __tdiv_to_l_@cntr cntr `uc  1 a 1 13 ]
+"60
+[v __tdiv_to_l_@f1 f1 `f  1 p 3 0 ]
+[v __tdiv_to_l_@f2 f2 `f  1 p 3 3 ]
+"101
+} 0
+"60 /opt/microchip/xc8/v1.44/sources/common/fldivl.c
+[v __div_to_l_ _div_to_l_ `(ul  1 e 4 0 ]
+{
+"63
+[v __div_to_l_@quot quot `ul  1 a 4 6 ]
+"62
+[v __div_to_l_@exp1 exp1 `uc  1 a 1 11 ]
+[v __div_to_l_@cntr cntr `uc  1 a 1 10 ]
+"60
+[v __div_to_l_@f1 f1 `d  1 p 3 0 ]
+[v __div_to_l_@f2 f2 `d  1 p 3 3 ]
+"101
+} 0
+"35 /opt/microchip/xc8/v1.44/sources/common/lltoft.c
+[v ___lltoft __lltoft `(f  1 e 3 0 ]
+{
+"37
+[v ___lltoft@exp exp `uc  1 a 1 16 ]
+"35
+[v ___lltoft@c c `ul  1 p 4 8 ]
+"46
+} 0
+"8 /opt/microchip/xc8/v1.44/sources/common/llmod.c
+[v ___llmod __llmod `(ul  1 e 4 0 ]
+{
+"11
+[v ___llmod@counter counter `uc  1 a 1 21 ]
+"8
+[v ___llmod@dividend dividend `ul  1 p 4 13 ]
+[v ___llmod@divisor divisor `ul  1 p 4 17 ]
+"26
+} 0
+"8 /opt/microchip/xc8/v1.44/sources/common/lldiv.c
+[v ___lldiv __lldiv `(ul  1 e 4 0 ]
+{
+"11
+[v ___lldiv@quotient quotient `ul  1 a 4 8 ]
+"12
+[v ___lldiv@counter counter `uc  1 a 1 12 ]
+"8
+[v ___lldiv@dividend dividend `ul  1 p 4 0 ]
+[v ___lldiv@divisor divisor `ul  1 p 4 4 ]
+"31
+} 0
+"44 /opt/microchip/xc8/v1.44/sources/common/fttol.c
+[v ___fttol __fttol `(l  1 e 4 0 ]
+{
+"47
+[v ___fttol@lval lval `ul  1 a 4 52 ]
+"46
+[v ___fttol@exp1 exp1 `uc  1 a 1 56 ]
+[v ___fttol@sign1 sign1 `uc  1 a 1 51 ]
+"44
+[v ___fttol@f1 f1 `f  1 p 3 42 ]
+"73
+} 0
+"20 /opt/microchip/xc8/v1.44/sources/common/ftsub.c
+[v ___ftsub __ftsub `(f  1 e 3 0 ]
+{
+[v ___ftsub@f1 f1 `f  1 p 3 57 ]
+[v ___ftsub@f2 f2 `f  1 p 3 60 ]
+"27
+} 0
+"86 /opt/microchip/xc8/v1.44/sources/common/ftadd.c
+[v ___ftadd __ftadd `(f  1 e 3 0 ]
+{
+"88
+[v ___ftadd@exp1 exp1 `uc  1 a 1 56 ]
+[v ___ftadd@exp2 exp2 `uc  1 a 1 55 ]
+[v ___ftadd@sign sign `uc  1 a 1 54 ]
+"86
+[v ___ftadd@f1 f1 `f  1 p 3 45 ]
+[v ___ftadd@f2 f2 `f  1 p 3 48 ]
+"148
+} 0
+"15 /opt/microchip/xc8/v1.44/sources/common/ftneg.c
+[v ___ftneg __ftneg `(f  1 e 3 0 ]
+{
+[v ___ftneg@f1 f1 `f  1 p 3 0 ]
+"20
+} 0
+"4 /opt/microchip/xc8/v1.44/sources/common/ftge.c
+[v ___ftge __ftge `(b  1 e 0 0 ]
+{
+[v ___ftge@ff1 ff1 `f  1 p 3 0 ]
+[v ___ftge@ff2 ff2 `f  1 p 3 3 ]
+"13
+} 0
+"16 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/putsxlcd.c
+[v _putsXLCD putsXLCD `(v  1 e 1 0 ]
+{
+[v putsXLCD@buffer buffer `*.35uc  1 p 2 1 ]
+"25
+} 0
+"17 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/writdata.c
+[v _WriteDataXLCD WriteDataXLCD `(v  1 e 1 0 ]
+{
+[v WriteDataXLCD@data data `uc  1 a 1 wreg ]
+[v WriteDataXLCD@data data `uc  1 a 1 wreg ]
+"36
+[v WriteDataXLCD@data data `uc  1 a 1 0 ]
+"64
+} 0
+"111 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/main.c
+[v _initXLCD initXLCD `(v  1 e 1 0 ]
+{
+"117
+} 0
+"20 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/openxlcd.c
+[v _OpenXLCD OpenXLCD `(v  1 e 1 0 ]
+{
+[v OpenXLCD@lcdtype lcdtype `uc  1 a 1 wreg ]
+[v OpenXLCD@lcdtype lcdtype `uc  1 a 1 wreg ]
+"32
+[v OpenXLCD@lcdtype lcdtype `uc  1 a 1 4 ]
+"81
+} 0
+"14 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/wcmdxlcd.c
+[v _WriteCmdXLCD WriteCmdXLCD `(v  1 e 1 0 ]
+{
+[v WriteCmdXLCD@cmd cmd `uc  1 a 1 wreg ]
+[v WriteCmdXLCD@cmd cmd `uc  1 a 1 wreg ]
+"33
+[v WriteCmdXLCD@cmd cmd `uc  1 a 1 0 ]
+"61
+} 0
+"14 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/setddram.c
+[v _SetDDRamAddr SetDDRamAddr `(v  1 e 1 0 ]
+{
+[v SetDDRamAddr@DDaddr DDaddr `uc  1 a 1 wreg ]
+[v SetDDRamAddr@DDaddr DDaddr `uc  1 a 1 wreg ]
+"33
+[v SetDDRamAddr@DDaddr DDaddr `uc  1 a 1 3 ]
+"61
+} 0
+"101 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/main.c
+[v _DelayPORXLCD DelayPORXLCD `(v  1 e 1 0 ]
+{
+"104
+} 0
+"8 /opt/microchip/xc8/v1.44/sources/pic18/d10ktcyx.c
+[v _Delay10KTCYx Delay10KTCYx `(v  1 e 1 0 ]
+{
+[v Delay10KTCYx@unit unit `uc  1 a 1 wreg ]
+[v Delay10KTCYx@unit unit `uc  1 a 1 wreg ]
+[v Delay10KTCYx@unit unit `uc  1 a 1 1 ]
+"13
+} 0
+"12 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/busyxlcd.c
+[v _BusyXLCD BusyXLCD `(uc  1 e 1 0 ]
+{
+"58
+} 0
+"96 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/main.c
+[v _DelayFor18TCY DelayFor18TCY `(v  1 e 1 0 ]
+{
+"99
+} 0
+"219
+[v _read_temperature read_temperature `(v  1 e 1 0 ]
+{
+"224
+} 0
+"62 /opt/microchip/xc8/v1.44/sources/common/ftmul.c
+[v ___ftmul __ftmul `(f  1 e 3 0 ]
+{
+"65
+[v ___ftmul@f3_as_product f3_as_product `um  1 a 3 30 ]
+"64
+[v ___ftmul@sign sign `uc  1 a 1 34 ]
+[v ___ftmul@cntr cntr `uc  1 a 1 33 ]
+[v ___ftmul@exp exp `uc  1 a 1 29 ]
+"62
+[v ___ftmul@f1 f1 `f  1 p 3 20 ]
+[v ___ftmul@f2 f2 `f  1 p 3 23 ]
+"157
+} 0
+"54 /opt/microchip/xc8/v1.44/sources/common/ftdiv.c
+[v ___ftdiv __ftdiv `(f  1 e 3 0 ]
+{
+"60
+[v ___ftdiv@f3 f3 `f  1 a 3 45 ]
+"59
+[v ___ftdiv@sign sign `uc  1 a 1 49 ]
+[v ___ftdiv@exp exp `uc  1 a 1 48 ]
+[v ___ftdiv@cntr cntr `uc  1 a 1 44 ]
+"54
+[v ___ftdiv@f1 f1 `f  1 p 3 35 ]
+[v ___ftdiv@f2 f2 `f  1 p 3 38 ]
+"86
+} 0
+"32 /opt/microchip/xc8/v1.44/sources/common/awtoft.c
+[v ___awtoft __awtoft `(f  1 e 3 0 ]
+{
+"34
+[v ___awtoft@sign sign `uc  1 a 1 11 ]
+"32
+[v ___awtoft@c c `i  1 p 2 8 ]
+"42
+} 0
+"62 /opt/microchip/xc8/v1.44/sources/common/float.c
+[v ___ftpack __ftpack `(f  1 e 3 0 ]
+{
+[v ___ftpack@arg arg `um  1 p 3 0 ]
+[v ___ftpack@exp exp `uc  1 p 1 3 ]
+[v ___ftpack@sign sign `uc  1 p 1 4 ]
+"86
+} 0
+"24 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/adcread.c
+[v _ReadADC ReadADC `(i  1 e 2 0 ]
+{
+"27
+} 0
+"22 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/adcconv.c
+[v _ConvertADC ConvertADC `(v  1 e 1 0 ]
+{
+"25
+} 0
+"26 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/adcbusy.c
+[v _BusyADC BusyADC `(uc  1 e 1 0 ]
+{
+"29
+} 0
+"184 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/main.c
+[v _read_data read_data `(i  1 e 2 0 ]
+{
+"186
+[v read_data@counter counter `i  1 a 2 15 ]
+"187
+[v read_data@tla tla `i  1 a 2 13 ]
+"188
+[v read_data@tha tha `i  1 a 2 11 ]
+"214
+} 0
+"72
+[v _HDByteReadI2C HDByteReadI2C `(uc  1 e 1 0 ]
+{
+[v HDByteReadI2C@ControlByte ControlByte `uc  1 a 1 wreg ]
+[v HDByteReadI2C@ControlByte ControlByte `uc  1 a 1 wreg ]
+[v HDByteReadI2C@HighAdd HighAdd `uc  1 p 1 3 ]
+[v HDByteReadI2C@LowAdd LowAdd `uc  1 p 1 4 ]
+[v HDByteReadI2C@data data `*.39uc  1 p 2 5 ]
+[v HDByteReadI2C@length length `uc  1 p 1 7 ]
+"74
+[v HDByteReadI2C@ControlByte ControlByte `uc  1 a 1 8 ]
+"94
+} 0
+"17 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/i2c_gets.c
+[v _getsI2C getsI2C `(c  1 e 1 0 ]
+{
+[v getsI2C@rdptr rdptr `*.39uc  1 p 2 0 ]
+[v getsI2C@length length `uc  1 p 1 2 ]
+"41
+} 0
+"11 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/i2c_read.c
+[v _ReadI2C ReadI2C `(uc  1 e 1 0 ]
+{
+"17
+} 0
+"12 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/i2c_writ.c
+[v _WriteI2C WriteI2C `(c  1 e 1 0 ]
+{
+[v WriteI2C@data_out data_out `uc  1 a 1 wreg ]
+[v WriteI2C@data_out data_out `uc  1 a 1 wreg ]
+"14
+[v WriteI2C@data_out data_out `uc  1 a 1 1 ]
+"43
+} 0
+"24 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/i2c_idle.c
+[v _IdleI2C IdleI2C `(v  1 e 1 0 ]
+{
+"28
+} 0
+"129 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/main.c
+[v _initTimer initTimer `(v  1 e 1 0 ]
+{
+"133
+[v initTimer@timer_value timer_value `ui  1 a 2 5 ]
+"131
+[v initTimer@timer_config1 timer_config1 `uc  1 a 1 7 ]
+"132
+[v initTimer@timer_config2 timer_config2 `uc  1 a 1 4 ]
+"137
+} 0
+"14 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/t1write.c
+[v _WriteTimer1 WriteTimer1 `(v  1 e 1 0 ]
+{
+[u S2222 Timers 2 `ui 1 lt 2 0 `[2]uc 1 bt 2 0 ]
+"16
+[v WriteTimer1@timer timer `S2222  1 a 2 2 ]
+"14
+[v WriteTimer1@timer1 timer1 `ui  1 p 2 0 ]
+"22
+} 0
+"16 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/t1open.c
+[v _OpenTimer1 OpenTimer1 `(v  1 e 1 0 ]
+{
+[v OpenTimer1@config config `uc  1 a 1 wreg ]
+[v OpenTimer1@config config `uc  1 a 1 wreg ]
+"18
+[v OpenTimer1@config config `uc  1 a 1 0 ]
+"36
+} 0
+"119 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/main.c
+[v _initADC initADC `(v  1 e 1 0 ]
+{
+"121
+[v initADC@portconfig portconfig `uc  1 a 1 10 ]
+[v initADC@adc_config2 adc_config2 `uc  1 a 1 9 ]
+[v initADC@adc_config1 adc_config1 `uc  1 a 1 8 ]
+[v initADC@i i `uc  1 a 1 7 ]
+[v initADC@config3 config3 `uc  1 a 1 6 ]
+[v initADC@channel channel `uc  1 a 1 5 ]
+"127
+} 0
+"68 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/adcopen.c
+[v _OpenADC OpenADC `(v  1 e 1 0 ]
+{
+[v OpenADC@config config `uc  1 a 1 wreg ]
+[v OpenADC@config config `uc  1 a 1 wreg ]
+"69
+[v OpenADC@config2 config2 `uc  1 p 1 0 ]
+"70
+[v OpenADC@portconfig portconfig `uc  1 p 1 1 ]
+"72
+[v OpenADC@config config `uc  1 a 1 4 ]
+"89
+} 0
+"310 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/main.c
+[v _alarm alarm `(v  1 e 1 0 ]
+{
+"318
+} 0
+"22 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/pw1setoc.c
+[v _SetOutputPWM1 SetOutputPWM1 `(v  1 e 1 0 ]
+{
+[v SetOutputPWM1@outputconfig outputconfig `uc  1 a 1 wreg ]
+[v SetOutputPWM1@outputconfig outputconfig `uc  1 a 1 wreg ]
+[v SetOutputPWM1@outputmode outputmode `uc  1 p 1 0 ]
+"35
+[v SetOutputPWM1@outputconfig outputconfig `uc  1 a 1 1 ]
+"151
+} 0
+"7 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/pw1setdc.c
+[v _SetDCPWM1 SetDCPWM1 `(v  1 e 1 0 ]
+{
+[u S2314 PWMDC 2 `ui 1 lpwm 2 0 `[2]uc 1 bpwm 2 0 ]
+"9
+[v SetDCPWM1@DCycle DCycle `S2314  1 a 2 4 ]
+"7
+[v SetDCPWM1@dutycycle dutycycle `ui  1 p 2 0 ]
+"19
+} 0
+"8 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/pw1open.c
+[v _OpenPWM1 OpenPWM1 `(v  1 e 1 0 ]
+{
+[v OpenPWM1@period period `uc  1 a 1 wreg ]
+[v OpenPWM1@period period `uc  1 a 1 wreg ]
+"11
+[v OpenPWM1@period period `uc  1 a 1 0 ]
+"19
+} 0
+"7 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/pw1close.c
+[v _ClosePWM1 ClosePWM1 `(v  1 e 1 0 ]
+{
+"12
+} 0
+"14 /media/sf_studium/Semester3/Systemnahe_Programmierung/Aufgaben/SystemnaheProgrammierung/i2c_open.c
+[v _OpenI2C OpenI2C `(v  1 e 1 0 ]
+{
+[v OpenI2C@sync_mode sync_mode `uc  1 a 1 wreg ]
+[v OpenI2C@sync_mode sync_mode `uc  1 a 1 wreg ]
+[v OpenI2C@slew slew `uc  1 p 1 0 ]
+"16
+[v OpenI2C@sync_mode sync_mode `uc  1 a 1 1 ]
+"26
+} 0
