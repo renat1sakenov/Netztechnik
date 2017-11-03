@@ -31,6 +31,12 @@ float max_temp = 18.5f;
 float min_temp = 18.0f;
 unsigned char msec,sec,min,hour = 0x00;
 
+       
+    char str_tmp[10];
+    char time[20];
+
+int counter = 0;
+
 
 /**
  * Function from Mr. Gontean
@@ -318,6 +324,94 @@ void alarm (){
 }
 
 
+void interrupt ISR()
+{
+ if(TMR0IE && TMR0IF)
+ {
+    counter ++;  
+    if(counter >= 1)
+    {
+        sec++;
+        if(sec>=60)
+        {
+            min++;
+            sec=0;
+            if(min>=60)
+            {
+                hour++;
+                min=0;
+            }
+        }
+    
+        read_temperature();  
+        sprintf(time, "%d:%d:%d", hour,min,sec);
+        sprintf(str_tmp, "%.2f %s",converted_temp.number, time);        
+ 
+        
+        //check every 30 sec for temperature
+        if((sec == 30 || sec == 0) && msec == 1)
+        {
+            if(converted_temp.number > max_temp || converted_temp.number < min_temp){
+                alarm();alarm();alarm();
+            }
+        }
+
+
+        //save the data every 2 minutes
+        if(min % 2 == 0 && sec == 0 && msec == 1)
+        {
+            unsigned char date[3];
+            date[0] = hour;
+            date[1] = min;
+            date[2] = sec;
+            if(write_data(converted_temp.bytes,date) < 0)
+            {
+                initXLCD();
+                putsXLCD("memory full");
+                __delay_ms(100);
+            }        
+            
+            //read_data();
+            //test_readwrite();
+       
+        }
+        counter = 0;
+    }
+    putsXLCD(str_tmp);
+    initXLCD();
+    
+    
+    TMR0IF = 0;
+ }
+}
+
+
+int testmain()
+{
+       //Setup Timer0
+   T0PS0=1; //Prescaler is divide by 256
+
+   T0PS1=1;
+   T0PS2=1;
+
+   PSA=0;      //Timer Clock Source is from Prescaler
+
+   T0CS=0;     //Prescaler gets clock from FCPU (5MHz)
+
+   T08BIT=1;   //8 BIT MODE
+
+   TMR0IE=1;   //Enable TIMER0 Interrupt
+   PEIE=1;     //Enable Peripheral Interrupt
+
+   GIE=1;      //Enable INTs globally
+
+   TMR0ON=1;      //Now start the timer!
+   initXLCD();
+  
+   
+   while(1);
+}
+
 /*
  * 
  */
@@ -329,11 +423,14 @@ int main()
     SSPADD = 0x27;
     
     initADC();
-    initTimer();
+    //initTimer();
     OpenI2C(MASTER, SLEW_OFF); 
     
     char str_tmp[10];
     char time[20];
+    
+    testmain();
+    /*
     
     while(1)
     {
@@ -393,4 +490,5 @@ int main()
             }   
         }
     }
+    */
 }
