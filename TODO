@@ -1,9 +1,8 @@
 Todo:
-	Beeper when temperature is to high / low
+	Use integer for temperature instead of float, so the read/write works
+	Timer
 
 Bugs:
-	Temperature is written or read incorrectly. (converted_temp:float)
-		- 2nd Byte is always wrong! e.g. switches from 0x96 to 0x92 after write/read
 	Timer is running to slow
 
 Not so important:
