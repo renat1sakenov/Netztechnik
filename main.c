@@ -13,24 +13,25 @@
 #include "timers.h"
 #include "pwm.h"
 
-union FLOAT
+union INT
 {
- float number;
- unsigned char bytes[3];
+    int number;
+    unsigned char bytes[4];
 };
 
 char eeprom_laddress = 0x00;
 char eeprom_haddress = 0x00;
-int block_size = 6;                 //3 bytes for temperature, 3 bytes for date
-int temp_size = 3;
+int block_size = 7;                 //4 bytes for temperature, 3 bytes for date
+int temp_size = 4;
 int time_size = 3;
-unsigned char result[6];                        //result
+unsigned char result[7];                        
 
-union FLOAT converted_temp;
-float max_temp = 18.5f;
-float min_temp = 18.0f;
-unsigned char msec,sec,min,hour = 0x00;
+union INT temp;
+int max_temp = 185;
+int min_temp = 180;
 
+unsigned char sec,min,hour = 0x00;
+unsigned char old_sec = 0x00;
        
 char str_tmp[10];
 char time[20];
@@ -142,7 +143,6 @@ void initTimer(void)
     // enable global interrupt
     GIE = 1;
     PEIE = 1;
-    
 }
 
 /**
@@ -155,8 +155,7 @@ void initTimer(void)
 int write_one_block(unsigned char* d, int size)
 {
     int i = 0;
-    // warum & Operator hier?
-    while(eeprom_laddress < 0xFF & i < size)
+    while(eeprom_laddress < 0xFF && i < size)
     {
         HDByteWriteI2C(0xA0,eeprom_haddress,eeprom_laddress++,*d);
         i++;d++;
@@ -230,7 +229,8 @@ int write_data(unsigned char * temp, unsigned char * date)
  {
     ConvertADC();
     while(BusyADC());
-    converted_temp.number = ((float)ReadADC() *100/255);
+    //converted_temp.number = ((float)ReadADC() *100/255);
+    temp.number = (int)((float)ReadADC() * 1000/255);
  }
  
  /**
@@ -239,20 +239,17 @@ int write_data(unsigned char * temp, unsigned char * date)
  void print_data()
  {
     int j = 0;
-    union FLOAT funion2;
-    for(; j<3; j++)
-        funion2.bytes[j] = result[j];
-
-    char temp[3];
-    sprintf(temp,"%.2f",funion2.number);
-    
+    union INT fint2;
+    for(; j<4; j++)
+        fint2.bytes[j] = result[j];
+ 
     unsigned char time[3];
-    for(; j<6; j++)
-        time[j-3] = result[j];
+    for(; j<7; j++)
+        time[j-4] = result[j];
     
     initXLCD();
     unsigned char str_temp2[3];
-    sprintf(str_temp2,"%s %d:%d:%d",temp, time[0],time[1],time[2]);
+    sprintf(str_temp2,"%d.%d %d:%d:%d",(fint2.number/10),(fint2.number%10),time[0],time[1],time[2]);
     putsXLCD(str_temp2);     
  }
  
@@ -261,12 +258,12 @@ int write_data(unsigned char * temp, unsigned char * date)
   */
 void test_readwrite()
 {
-    //if test data is needed, uncomment. writes 16.0f and 'abc' into the eeprom.
+    //if test data is needed, uncomment. writes 160 and 'abc' into the eeprom.
     /* 
-    union FLOAT funion;
-    funion.number = 16.0f;
+    union INT testd;
+    testd.number = 160;
     char test2[3] = {'a','b','c'};    
-    write_data(funion.bytes,test2);
+    write_data(testd.bytes,test2);
     __delay_ms(1000);
     */ 
     initXLCD();
@@ -327,143 +324,13 @@ void alarm (){
     return;
 }
 
-/*
-void interrupt ISR()
-{
- if(TMR0IE && TMR0IF)
- {
-    counter ++;  
-    if(counter >= 1)
-    {
-        sec++;
-        if(sec>=60)
-        {
-            min++;
-            sec=0;
-            if(min>=60)
-            {
-                hour++;
-                min=0;
-            }
-        }
-    
-        read_temperature();  
-        sprintf(time, "%d:%d:%d", hour,min,sec);
-        sprintf(str_tmp, "%.2f %s",converted_temp.number, time);        
- 
-        
-        //check every 30 sec for temperature
-        if((sec == 30 || sec == 0) && msec == 1)
-        {
-            if(converted_temp.number > max_temp || converted_temp.number < min_temp){
-                alarm();alarm();alarm();
-            }
-        }
-
-
-        //save the data every 2 minutes
-        if(min % 2 == 0 && sec == 0 && msec == 1)
-        {
-            unsigned char date[3];
-            date[0] = hour;
-            date[1] = min;
-            date[2] = sec;
-            if(write_data(converted_temp.bytes,date) < 0)
-            {
-                initXLCD();
-                putsXLCD("memory full");
-                __delay_ms(100);
-            }        
-            
-            //read_data();
-            //test_readwrite();
-       
-        }
-        counter = 0;
-    }
-    putsXLCD(str_tmp);
-    initXLCD();
-    
-    
-    TMR0IF = 0;
- }
-}
-
-*/
-int testmain()
-{
-       //Setup Timer0
-   T0PS0=1; //Prescaler is divide by 256
-
-   T0PS1=1;
-   T0PS2=1;
-
-   PSA=0;      //Timer Clock Source is from Prescaler
-
-   T0CS=0;     //Prescaler gets clock from FCPU (5MHz)
-
-   T08BIT=1;   //8 BIT MODE
-
-   TMR0IE=1;   //Enable TIMER0 Interrupt
-   PEIE=1;     //Enable Peripheral Interrupt
-
-   GIE=1;      //Enable INTs globally
-
-   TMR0ON=1;      //Now start the timer!
-   initXLCD();
-  
-   
-   while(1);
-}
-
-
 void high_priority interrupt TIMER1(void){
-    char str_tmp[10];
-    char time[20];
-            
     if(TMR1IF == 1){
-        initXLCD();
         TMR1IF = 0;
         TMR1 = 0x8000;
         sec++;
-
-        read_temperature();  
-       
-        sprintf(time, "%d:%d:%d", hour,min,sec);
-        sprintf(str_tmp, "%.2f %s",converted_temp.number, time);
-        putsXLCD(str_tmp);
-        //check every 30 sec for temperature
-        /*
-        if(sec == 30 || sec == 0)
-        {
-            
-            if(converted_temp.number > max_temp || converted_temp.number < min_temp){
-                alarm();alarm();alarm();
-            }
-        }    */
         if(sec==60)
         {
-            //save the data every 2 minutes
-            /*
-            if (min % 2 == 0){
-                unsigned char date[3];
-                date[0] = hour;
-                date[1] = min;
-                date[2] = sec;
-                if(write_data(converted_temp.bytes,date) < 0)
-                {
-                    initXLCD();
-                    putsXLCD("memory full");
-                    __delay_ms(100);
-                }
-
-                //testing 
-
-                read_data();
-                test_readwrite();
-                //print_all_data();
-            }
-            */
             min++;
             sec=0;
             if(min>=60)
@@ -472,8 +339,6 @@ void high_priority interrupt TIMER1(void){
                 min=0;
             }
         }
-
-
     }
 }
 
@@ -488,11 +353,44 @@ int main()
     initXLCD();
     OpenI2C(MASTER, SLEW_OFF); 
     
-    while(1);
-    CloseTimer1();
-  //  testmain();
-                   
+    while(1)
+    {    
+        if(old_sec != sec)
+        {
+            old_sec = sec;
+            initXLCD();
+            read_temperature();  
 
-    
+            sprintf(time, "%d:%d:%d", hour,min,sec);
+            sprintf(str_tmp, "%d.%d %s",(temp.number/10),(temp.number%10), time);
+            putsXLCD(str_tmp);
+
+            //check temperature once a minute
+            if(sec == 30)
+            { 
+                if(temp.number > max_temp || temp.number < min_temp){
+                    alarm();alarm();alarm();
+                }
+            }   
+
+            //save the data every 2 minutes    
+            if (min % 2 == 0 && sec == 1){
+                unsigned char date[3];
+                date[0] = hour;
+                date[1] = min;
+                date[2] = sec;
+                if(write_data(temp.bytes,date) < 0)
+                {
+                    initXLCD();
+                    putsXLCD("memory full");
+                    __delay_ms(100);
+                }
+                
+                read_data();
+                test_readwrite();
+                //print_all_data();
+            }
+        }        
+    }
+    CloseTimer1();    
 }
- 
