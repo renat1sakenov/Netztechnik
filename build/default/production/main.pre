@@ -4117,7 +4117,13 @@ float max_temp = 18.5f;
 float min_temp = 18.0f;
 unsigned char msec,sec,min,hour = 0x00;
 
-# 43
+
+char str_tmp[10];
+char time[20];
+
+int counter = 0;
+
+# 49
 unsigned char HDByteWriteI2C( unsigned char ControlByte, unsigned char HighAdd, unsigned char LowAdd, unsigned char data )
 {
 IdleI2C();
@@ -4137,7 +4143,7 @@ while (EEAckPolling(ControlByte));
 return ( 0 );
 }
 
-# 72
+# 78
 unsigned char HDByteReadI2C( unsigned char ControlByte, unsigned char HighAdd, unsigned char LowAdd, unsigned char *data, unsigned char length )
 {
 IdleI2C();
@@ -4197,18 +4203,22 @@ OpenADC(adc_config1,adc_config2,portconfig);
 
 void initTimer(void)
 {
-unsigned char timer_config1=0x00;
-unsigned char timer_config2=0x00;
-unsigned int timer_value=0x00;
-timer_config1 = 0b11111111 & 0b11111111 & 0b11011111 & 0b11111111 & 0b11111111 & 0b11111111;
-OpenTimer1(timer_config1);
-WriteTimer1(timer_value);
+
+T1CON = 0x8F;
+
+TMR1 = 0x8000;
+TMR1IE = 1;
+
+GIE = 1;
+PEIE = 1;
+
 }
 
-# 146
+# 155
 int write_one_block(unsigned char* d, int size)
 {
 int i = 0;
+
 while(eeprom_laddress < 0xFF & i < size)
 {
 HDByteWriteI2C(0xA0,eeprom_haddress,eeprom_laddress++,*d);
@@ -4239,7 +4249,7 @@ int write_data(unsigned char * temp, unsigned char * date)
 return write_one_block(temp,temp_size) + write_one_block(date,time_size);
 }
 
-# 184
+# 194
 int read_data(void)
 {
 int counter = block_size;
@@ -4272,7 +4282,7 @@ return 0;
 else return -1;
 }
 
-# 219
+# 229
 void read_temperature(void)
 {
 ConvertADC();
@@ -4280,7 +4290,7 @@ while(BusyADC());
 converted_temp.number = ((float)ReadADC() *100/255);
 }
 
-# 229
+# 239
 void print_data()
 {
 int j = 0;
@@ -4301,11 +4311,11 @@ sprintf(str_temp2,"%s %d:%d:%d",temp, time[0],time[1],time[2]);
 putsXLCD(str_temp2);
 }
 
-# 252
+# 262
 void test_readwrite()
 {
 
-# 262
+# 272
 initXLCD();
 putsXLCD("SHOW DATA");
 _delay((unsigned long)((2000)*(4000000/4000.0)));
@@ -4319,7 +4329,7 @@ putsXLCD("END");
 _delay((unsigned long)((1000)*(4000000/4000.0)));
 }
 
-# 278
+# 288
 void print_all_data()
 {
 int pad_counter = 1;
@@ -4330,7 +4340,7 @@ _delay((unsigned long)((500)*(4000000/4000.0)));
 
 while(1)
 {
-initXLCD();
+
 for(;a < pad_counter; a ++)
 {
 if(read_data() == -1){
@@ -4362,32 +4372,56 @@ _delay((unsigned long)((100)*(4000000/4000.0)));
 return;
 }
 
-# 324
-int main()
+# 393
+int testmain()
 {
-LATA = 0xFF;
-LATB = 0xFF;
-TRISC = 0xFF;
-SSPADD = 0x27;
 
-initADC();
-initTimer();
-OpenI2C(0b00001000, 0b10000000);
+T0PS0=1;
 
+T0PS1=1;
+T0PS2=1;
+
+PSA=0;
+
+T0CS=0;
+
+T08BIT=1;
+
+TMR0IE=1;
+PEIE=1;
+
+GIE=1;
+
+TMR0ON=1;
+initXLCD();
+
+
+while(1);
+}
+
+
+void high_priority interrupt TIMER1(void){
 char str_tmp[10];
 char time[20];
 
-while(1)
-{
-if(PIR1bits.TMR1IF=1)
-{
-msec++;
-if(msec>=10)
-{
+if(TMR1IF == 1){
+initXLCD();
+TMR1IF = 0;
+TMR1 = 0x8000;
 sec++;
-msec=0;
-if(sec>=60)
+
+
+read_temperature();
+
+sprintf(time, "%d:%d:%d", hour,min,sec);
+sprintf(str_tmp, "%.2f %s",converted_temp.number, time);
+putsXLCD(str_tmp);
+
+# 445
+if(sec==60)
 {
+
+# 469
 min++;
 sec=0;
 if(min>=60)
@@ -4396,43 +4430,27 @@ hour++;
 min=0;
 }
 }
+
+
 }
+}
+
+int main()
+{
+LATA = 0xFF;
+LATB = 0xFF;
+TRISC = 0xFF;
+SSPADD = 0x27;
+initTimer();
+initADC();
 initXLCD();
-read_temperature();
-sprintf(time, "%d:%d:%d", hour,min,sec);
-sprintf(str_tmp, "%.2f %s",converted_temp.number, time);
-putsXLCD(str_tmp);
+OpenI2C(0b00001000, 0b10000000);
 
-
-if((sec == 30 || sec == 0) && msec == 1)
-{
-if(converted_temp.number > max_temp || converted_temp.number < min_temp){
-alarm();alarm();alarm();
-}
-}
+while(1);
+CloseTimer1();
 
 
 
-if(min % 2 == 0 && sec == 0 && msec == 1)
-{
-unsigned char date[3];
-date[0] = hour;
-date[1] = min;
-date[2] = sec;
-if(write_data(converted_temp.bytes,date) < 0)
-{
-initXLCD();
-putsXLCD("memory full");
-_delay((unsigned long)((100)*(4000000/4000.0)));
-}
-
-
-
-_delay((unsigned long)((100)*(4000000/4000.0)));
-read_data();
-test_readwrite();
 
 }
-}
-}
-}
+

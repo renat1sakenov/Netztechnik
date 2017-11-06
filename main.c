@@ -32,8 +32,8 @@ float min_temp = 18.0f;
 unsigned char msec,sec,min,hour = 0x00;
 
        
-    char str_tmp[10];
-    char time[20];
+char str_tmp[10];
+char time[20];
 
 int counter = 0;
 
@@ -133,13 +133,16 @@ void initADC(void)
 }
 
 void initTimer(void)
-{
-    unsigned char timer_config1=0x00;
-    unsigned char timer_config2=0x00;
-    unsigned int timer_value=0x00;
-    timer_config1 = T1_16BIT_RW & T1_SOURCE_EXT & T1_PS_1_2 & T1_OSC1EN_ON & T1_SYNC_EXT_OFF & TIMER_INT_ON;
-    OpenTimer1(timer_config1);
-    WriteTimer1(timer_value);
+{    
+    // set bits to configure Timer
+    T1CON = 0x8F;
+    // set timer register half full
+    TMR1 = 0x8000;
+    TMR1IE = 1;
+    // enable global interrupt
+    GIE = 1;
+    PEIE = 1;
+    
 }
 
 /**
@@ -152,6 +155,7 @@ void initTimer(void)
 int write_one_block(unsigned char* d, int size)
 {
     int i = 0;
+    // warum & Operator hier?
     while(eeprom_laddress < 0xFF & i < size)
     {
         HDByteWriteI2C(0xA0,eeprom_haddress,eeprom_laddress++,*d);
@@ -291,7 +295,7 @@ void print_all_data()
     
     while(1)
     {
-        initXLCD();
+        //initXLCD();
         for(;a < pad_counter; a ++)
         {
             if(read_data() == -1){
@@ -323,7 +327,7 @@ void alarm (){
     return;
 }
 
-
+/*
 void interrupt ISR()
 {
  if(TMR0IE && TMR0IF)
@@ -385,7 +389,7 @@ void interrupt ISR()
  }
 }
 
-
+*/
 int testmain()
 {
        //Setup Timer0
@@ -412,64 +416,36 @@ int testmain()
    while(1);
 }
 
-/*
- * 
- */
-int main() 
-{
-    LATA = 0xFF;
-    LATB = 0xFF;
-    TRISC = 0xFF;
-    SSPADD = 0x27;
-    
-    initADC();
-    //initTimer();
-    OpenI2C(MASTER, SLEW_OFF); 
-    
+
+void high_priority interrupt TIMER1(void){
     char str_tmp[10];
     char time[20];
-    
-    testmain();
-    /*
-    
-    while(1)
-    {
-        if(PIR1bits.TMR1IF=1)
-        {
-            msec++;
-            if(msec>=10)
-            {
-                sec++;
-                msec=0;
-                if(sec>=60)
-                {
-                    min++;
-                    sec=0;
-                    if(min>=60)
-                    {
-                        hour++;
-                        min=0;
-                    }
-                }
-            }
-            initXLCD();
-            read_temperature();  
-            sprintf(time, "%d:%d:%d", hour,min,sec);
-            sprintf(str_tmp, "%.2f %s",converted_temp.number, time);
-            putsXLCD(str_tmp);
-    
-            //check every 30 sec for temperature
-            if((sec == 30 || sec == 0) && msec == 1)
-            {
-                if(converted_temp.number > max_temp || converted_temp.number < min_temp){
-                    alarm();alarm();alarm();
-                }
-            }
             
-         
+    if(TMR1IF == 1){
+        initXLCD();
+        TMR1IF = 0;
+        TMR1 = 0x8000;
+        sec++;
+
+        read_temperature();  
+       
+        sprintf(time, "%d:%d:%d", hour,min,sec);
+        sprintf(str_tmp, "%.2f %s",converted_temp.number, time);
+        putsXLCD(str_tmp);
+        //check every 30 sec for temperature
+        /*
+        if(sec == 30 || sec == 0)
+        {
+            
+            if(converted_temp.number > max_temp || converted_temp.number < min_temp){
+                alarm();alarm();alarm();
+            }
+        }    */
+        if(sec==60)
+        {
             //save the data every 2 minutes
-            if(min % 2 == 0 && sec == 0 && msec == 1)
-            {
+            /*
+            if (min % 2 == 0){
                 unsigned char date[3];
                 date[0] = hour;
                 date[1] = min;
@@ -480,15 +456,43 @@ int main()
                     putsXLCD("memory full");
                     __delay_ms(100);
                 }
-                
+
                 //testing 
-                
-                __delay_ms(100);
+
                 read_data();
                 test_readwrite();
                 //print_all_data();
-            }   
+            }
+            */
+            min++;
+            sec=0;
+            if(min>=60)
+            {
+                hour++;
+                min=0;
+            }
         }
+
+
     }
-    */
 }
+
+int main() 
+{
+    LATA = 0xFF;
+    LATB = 0xFF;
+    TRISC = 0xFF;
+    SSPADD = 0x27;
+    initTimer();        
+    initADC();
+    initXLCD();
+    OpenI2C(MASTER, SLEW_OFF); 
+    
+    while(1);
+    CloseTimer1();
+  //  testmain();
+                   
+
+    
+}
+ 
