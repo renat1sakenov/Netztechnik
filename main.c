@@ -3,7 +3,7 @@
  * Project for Systemnahe Programmierung
  * 
  * This project implements a temperature measuring system.
- * The temperature and a counter is displayed on the LCD and is written every 2 minutes to the EEPROM
+ * The temperature and a counter is displayed on the LCD and is written every minute to the EEPROM
  * if the temperature is below min_temp or above max_temp, the buzzer rings an alarm
  * 
  * 
@@ -268,40 +268,45 @@ int write_data(unsigned char * temp, unsigned char * date)
 }
  
  /**
-  * Puts the last block (4 bytes) from the EEPROM into 'result' 
+  * Puts the last 'n'-th blocks (4 bytes) from the EEPROM into 'result'
+  * @n block number. if n equals 1 = the last written entry. 
   * @return 0 = success, -1 = there is nothing to read.
   */
- int read_data(void)
+ int read_data(int n)
  {
-     int counter = block_size;
-     int tla = eeprom_laddress;
-     int tha = eeprom_haddress;
-     while(tla > 0x00 && counter > 0)
+     if(n >= 1)
      {
-         counter--;
-         tla--;
+        int counter = block_size * n;
+        int tla = eeprom_laddress;
+        int tha = eeprom_haddress;
+        while(1)
+        {
+           counter--;
+           tla--;
+
+           if(counter > 0 && tla == 0)
+           {
+               tla = 0xFF;
+               if(tha > 0)
+               {
+                   tha--;
+               }
+               else
+               {
+                   //already on block 0
+                   return -1;
+               }
+           }
+           if(counter == 0)
+               break;
+        }
+        if(HDByteReadI2C(0xA0,tha,tla,result,block_size) == 0)
+            return 0;
+        else return -1;
      }
-     if(counter > 0)
-     {
-         tla = 0xFF;
-         if(tha > 0)
-         {
-             tha--;
-             while(counter > 0)
-             {
-                 tla--;
-             }
-         }
-         else
-         {
-             //already on block 0
-             return -1;
-         }
-     }     
-     if(HDByteReadI2C(0xA0,tha,tla,result,block_size) == 0)
-         return 0;
-     else return -1;
+     return -1;
  }
+ 
  
  /**
   * read the temperature into converted_temp
@@ -361,36 +366,28 @@ void test_readwrite(void)
 }
 
 /**
- * print all values from the EEPROM
+ * print all values from the EEPROM (in reversed order, from now to the start)
  */
 void print_all_data()
 {
-    int pad_counter = 1;
-    int a = 0;
+    int a = 1;
     initXLCD();
     putsXLCD("SHOW ALL DATA");
     __delay_ms(500);
     
-    while(1)
+    
+    while(read_data(a++) != -1)
     {
-        for(;a < pad_counter; a ++)
-        {
-            if(read_data() == -1){
-                initXLCD();
-                putsXLCD("END");
-                __delay_ms(100);
-                return;
-            }
-        }
-        __delay_ms(10);
+        initXLCD();
         print_data();
-        __delay_ms(200);
+        __delay_ms(500);
         initXLCD();
         putsXLCD("NEXT");
-        __delay_ms(200);
-        pad_counter++;
-        a = 0;
+        __delay_ms(500);
     }
+    initXLCD();
+    putsXLCD("END");
+    __delay_ms(500);
 }
  
 /*
@@ -461,8 +458,8 @@ int main()
                 }
             }   
 
-            //save the data every 2 minutes    
-            if (min % 1 == 0 && sec == 1){
+            //save the data every minute    
+            if (sec == 1){
                 if(write_data(temp.bytes,total_time.bytes) < 0)
                 {
                     initXLCD();
@@ -471,11 +468,13 @@ int main()
                 }
                 __delay_ms(20);
                 
-                read_data();
+                //read the last written block from the EEPROM and display it
+                read_data(1);
                 test_readwrite();
+                
+                //read all blocks from the EEPROM and display them
                 //print_all_data();
             }
         }        
-    }
-    CloseTimer1();    
+    }  
 }
