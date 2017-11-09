@@ -1,6 +1,14 @@
 /* 
+ * TEMPERATURE LOGGER for the APIC -DE 1.1
+ * Project for Systemnahe Programmierung
+ * 
+ * This project implements a temperature measuring system.
+ * The temperature and a counter is displayed on the LCD and is written every 2 minutes to the EEPROM
+ * if the temperature is below min_temp or above max_temp, the buzzer rings an alarm
+ * 
+ * 
  * File:   main.c
- * Author: renat
+ * Author: Renat Sakenov, Fabian Bartenschlager
  *
  * Created on October 16, 2017, 1:32 PM
  */
@@ -25,35 +33,73 @@ union UINT
     unsigned char bytes[2];
 };
 
+/*
+ *  holds the value of the current low-byte for the EEPROM address.
+ */
 char eeprom_laddress = 0x00;
-char eeprom_haddress = 0x00;
-int block_size = 4;                 //4 bytes for temperature, 3 bytes for date
-int temp_size = 2;
-int time_size = 2;//3
-unsigned char result[4];//7                        
 
+
+/*
+ *  holds the value of the current high-byte for the EEPROM address.
+ */
+char eeprom_haddress = 0x00;
+
+/*
+ *  Our model for saving the temperature and timestamp consists out of 4 byte blocks.
+ *  2 bytes for the temperature and 2 bytes for the timestamp.
+ * 
+ */
+int block_size = 4;                 
+int temp_size = 2;
+int time_size = 2;
+
+
+/*
+ *  When reading a block from the EEPROM, the result is stored in this array
+ */
+unsigned char result[4];                        
+
+/*
+ *  The measured temperature is hold in this variable, before it's written to the EEPROM
+ *
+ */
 union INT temp;
+
+/*
+ *  This variable contains the passed minutes. It is written to the EEPROM.
+ *  When reading from the EEPROM it is converted in hour:minutes and then displayed
+ *  The total amount of time we can track are 65535 minutes (~45 + 1/2 days)
+ */
+union UINT total_time;
+
+/*
+ * These variables are used to just display the current time. They are not written to the EEPROM.
+ */
+unsigned char sec,min,hour = 0x00;
+
+/*
+ *  helper.
+ */
+unsigned char old_sec = 0x00;
+
+
+/*
+ * maximal and minimal temperature on which the buzzer don't ring an alarm
+ */
 int max_temp = 185;
 int min_temp = 180;
 
-unsigned char sec,min,hour = 0x00;
-unsigned char old_sec = 0x00;
-union INT total_time;
 
-       
-char str_tmp[10];
-char time[20];
-
-int counter = 0;
+/*
+ *  helper to display the data on the LCD
+ */
+char display[10];
+char time[10];
 
 
 /**
  * Function from Mr. Gontean
- * @param ControlByte
- * @param HighAdd
- * @param LowAdd
- * @param data
- * @return 
+ * Writing one byte to the EEPROM
  */
 unsigned char HDByteWriteI2C( unsigned char ControlByte, unsigned char HighAdd, unsigned char LowAdd, unsigned char data )
 {
@@ -74,6 +120,7 @@ unsigned char HDByteWriteI2C( unsigned char ControlByte, unsigned char HighAdd, 
   return ( 0 );                   // return with no error
 }
 
+/*Function from Mr. Gontean     */
 /********************************************************************
 *     Function Name:    HDByteReadI2C                               *
 *     Parameters:       EE memory ControlByte, address, pointer and *
@@ -108,21 +155,33 @@ unsigned char HDByteReadI2C( unsigned char ControlByte, unsigned char HighAdd, u
   return ( 0 );                   // return with no error
 }
 
-void DelayFor18TCY( void ) //18+ cycles delay
+/*
+ *  Necessary delay method for the LCD
+ */
+void DelayFor18TCY( void )
 {
     __delay_us(20);   
 }
 
-void DelayPORXLCD(void)         // 15ms delay
+/*
+ *  Necessary delay method for the LCD
+ */
+void DelayPORXLCD(void)
 {
     __delay_ms(15);                 // 15ms delay with 4MHz Clock
 }
 
-void DelayXLCD(void)            // 5ms delay
+/*
+ *  Necessary delay method for the LCD
+ */
+void DelayXLCD(void)            
 {
     __delay_ms(5);                  // 5ms delay with 4MHz Clock
 }
  
+/*
+ *  Initializing the LCD
+ */
 void initXLCD()
 {
     OpenXLCD( FOUR_BIT & LINES_5X7 );	
@@ -131,6 +190,10 @@ void initXLCD()
     WriteCmdXLCD(0x0C);            // turn display on without cursor    
 }
 
+/*
+ *  Initializing the ADC
+ *  Used for temperature conversion
+ */
 void initADC(void)
 {
     unsigned char channel=0x00,adc_config1=0x00,adc_config2=0x00,config3=0x00,portconfig=0x00,i=0;
@@ -141,6 +204,10 @@ void initADC(void)
     OpenADC(adc_config1,adc_config2,portconfig);    
 }
 
+/*
+ *  Initializing the Timer
+ *  Used to measure the time
+ */
 void initTimer(void)
 {    
     // set bits to configure Timer
@@ -154,11 +221,12 @@ void initTimer(void)
 }
 
 /**
- * writes size bytes from d into the eeprom. start positions are eeprom_laddress / eeprom_haddress
- * eeprom_l/h address are increased.
- * @param d
- * @param size
- * @return 
+ * writes 'size' bytes from the array 'd' into the EEPROM. 
+ * Start positions are eeeprom_laddress / eeprom_haddress.
+ * eeprom_laddress and eeprom_haddress are increased
+ * @param d Data array.
+ * @param size Size of the data array.
+ * @return 0 = success, -1 = Error, the memory is full
  */
 int write_one_block(unsigned char* d, int size)
 {
@@ -188,15 +256,20 @@ int write_one_block(unsigned char* d, int size)
     return 0;
 }
 
+/**
+ * write one block (temperature and timestamp) to the EEPROM
+ * @param temp  temperature as an byte array
+ * @param date  timestamp as an byte array 
+ * @return 0 = success, otherwise error, memory is full
+ */
 int write_data(unsigned char * temp, unsigned char * date)
 {
      return write_one_block(temp,temp_size) + write_one_block(date,time_size);
 }
  
  /**
-  * Puts the last 8 Bytes from the eeprom into "result" 
-  * if there are none returns -1
-  * @return 
+  * Puts the last block (4 bytes) from the EEPROM into 'result' 
+  * @return 0 = success, -1 = there is nothing to read.
   */
  int read_data(void)
  {
@@ -242,38 +315,31 @@ int write_data(unsigned char * temp, unsigned char * date)
  }
  
  /**
-  * print a formatted string from "result"
+  * print the values from 'result' to the LCD as temperature and timestamp
   */
- void print_data()
+ void print_data(void)
  {
     int j = 0;
     union INT uint2;
     union UINT uint3;
-    for(; j<2; j++)
+    for(; j<temp_size; j++)
         uint2.bytes[j] = result[j];
  
-    //unsigned int time32[2];
     for(; j<block_size; j++)
-        uint3.bytes[j-2] = result[j];
-    
-    //uint3.number = (unsigned int)result[j];
-    
-    //convert min to hours,minutes
-    //time32[1] = (unsigned int)(uint3.number % 60);
-    //time32[0] = (unsigned int)(uint3.number / 60 / 60);
-    
+        uint3.bytes[j-temp_size] = result[j];
+ 
     initXLCD();
-    char str_temp2[10];
-    sprintf(str_temp2,"%d.%d %d:%d:00",(uint2.number/10),(uint2.number%10),(uint3.number / 60 / 60),(uint3.number % 60));
-    putsXLCD(str_temp2);     
+    char print_this[10];
+    sprintf(print_this,"%d.%d %d:%d:00",(uint2.number/10),(uint2.number%10),(uint3.number / 60 / 60),(uint3.number % 60));
+    putsXLCD(print_this);     
  }
  
  /**
-  * prints the value from "result" (temperature and time)
+  * helper method for print_data
   */
-void test_readwrite()
+void test_readwrite(void)
 {
-    //if test data is needed, uncomment. writes 160 and 'abc' into the eeprom.
+    //if test data is needed, uncomment. writes 160 and 'abc' into the EEPROM.
     /* 
     union INT testd;
     testd.number = 160;
@@ -295,7 +361,7 @@ void test_readwrite()
 }
 
 /**
- * print all values from the eeprom
+ * print all values from the EEPROM
  */
 void print_all_data()
 {
@@ -307,7 +373,6 @@ void print_all_data()
     
     while(1)
     {
-        //initXLCD();
         for(;a < pad_counter; a ++)
         {
             if(read_data() == -1){
@@ -328,7 +393,9 @@ void print_all_data()
     }
 }
  
-
+/*
+ *  Rings the alarm
+ */
 void alarm (){
     OpenPWM1(((100000/2.0f)/4)-1);
     SetDCPWM1((100000/2.0f)/2);
@@ -339,6 +406,10 @@ void alarm (){
     return;
 }
 
+/*
+ *  Timer interrupt. Gets called every second
+ *  Increases the values of hour,min and sec to display the time
+ */
 void high_priority interrupt TIMER1(void){
     if(TMR1IF == 1){
         TMR1IF = 0;
@@ -379,8 +450,8 @@ int main()
             read_temperature();  
 
             sprintf(time, "%d:%d:%d", hour,min,sec);
-            sprintf(str_tmp, "%d.%d %s",(temp.number/10),(temp.number%10), time);
-            putsXLCD(str_tmp);
+            sprintf(display, "%d.%d %s",(temp.number/10),(temp.number%10), time);
+            putsXLCD(display);
 
             //check temperature once a minute
             if(sec == 30)
@@ -392,11 +463,6 @@ int main()
 
             //save the data every 2 minutes    
             if (min % 1 == 0 && sec == 1){
-                //unsigned char date[3];
-                //date[0] = hour;
-                //date[1] = min;
-                //date[2] = sec;
-
                 if(write_data(temp.bytes,total_time.bytes) < 0)
                 {
                     initXLCD();
