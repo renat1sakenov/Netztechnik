@@ -16,15 +16,21 @@
 union INT
 {
     int number;
-    unsigned char bytes[4];
+    unsigned char bytes[2];
+};
+
+union UINT
+{
+    unsigned int number;
+    unsigned char bytes[2];
 };
 
 char eeprom_laddress = 0x00;
 char eeprom_haddress = 0x00;
-int block_size = 7;                 //4 bytes for temperature, 3 bytes for date
-int temp_size = 4;
-int time_size = 3;
-unsigned char result[7];                        
+int block_size = 4;                 //4 bytes for temperature, 3 bytes for date
+int temp_size = 2;
+int time_size = 2;//3
+unsigned char result[4];//7                        
 
 union INT temp;
 int max_temp = 185;
@@ -32,6 +38,8 @@ int min_temp = 180;
 
 unsigned char sec,min,hour = 0x00;
 unsigned char old_sec = 0x00;
+union INT total_time;
+
        
 char str_tmp[10];
 char time[20];
@@ -186,7 +194,7 @@ int write_data(unsigned char * temp, unsigned char * date)
 }
  
  /**
-  * Puts the last 6 Bytes from the eeprom into "result" 
+  * Puts the last 8 Bytes from the eeprom into "result" 
   * if there are none returns -1
   * @return 
   */
@@ -239,17 +247,24 @@ int write_data(unsigned char * temp, unsigned char * date)
  void print_data()
  {
     int j = 0;
-    union INT fint2;
-    for(; j<4; j++)
-        fint2.bytes[j] = result[j];
+    union INT uint2;
+    union UINT uint3;
+    for(; j<2; j++)
+        uint2.bytes[j] = result[j];
  
-    unsigned char time[3];
-    for(; j<7; j++)
-        time[j-4] = result[j];
+    //unsigned int time32[2];
+    for(; j<block_size; j++)
+        uint3.bytes[j-2] = result[j];
+    
+    //uint3.number = (unsigned int)result[j];
+    
+    //convert min to hours,minutes
+    //time32[1] = (unsigned int)(uint3.number % 60);
+    //time32[0] = (unsigned int)(uint3.number / 60 / 60);
     
     initXLCD();
-    unsigned char str_temp2[3];
-    sprintf(str_temp2,"%d.%d %d:%d:%d",(fint2.number/10),(fint2.number%10),time[0],time[1],time[2]);
+    char str_temp2[10];
+    sprintf(str_temp2,"%d.%d %d:%d:00",(uint2.number/10),(uint2.number%10),(uint3.number / 60 / 60),(uint3.number % 60));
     putsXLCD(str_temp2);     
  }
  
@@ -331,6 +346,7 @@ void high_priority interrupt TIMER1(void){
         sec++;
         if(sec==60)
         {
+            total_time.number++;
             min++;
             sec=0;
             if(min>=60)
@@ -344,6 +360,7 @@ void high_priority interrupt TIMER1(void){
 
 int main() 
 {
+    total_time.number = 0;
     LATA = 0xFF;
     LATB = 0xFF;
     TRISC = 0xFF;
@@ -374,17 +391,19 @@ int main()
             }   
 
             //save the data every 2 minutes    
-            if (min % 2 == 0 && sec == 1){
-                unsigned char date[3];
-                date[0] = hour;
-                date[1] = min;
-                date[2] = sec;
-                if(write_data(temp.bytes,date) < 0)
+            if (min % 1 == 0 && sec == 1){
+                //unsigned char date[3];
+                //date[0] = hour;
+                //date[1] = min;
+                //date[2] = sec;
+
+                if(write_data(temp.bytes,total_time.bytes) < 0)
                 {
                     initXLCD();
                     putsXLCD("memory full");
                     __delay_ms(100);
                 }
+                __delay_ms(20);
                 
                 read_data();
                 test_readwrite();
