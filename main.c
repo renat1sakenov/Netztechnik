@@ -2,7 +2,7 @@
  * TEMPERATURE LOGGER for the APIC -DE 1.1
  * Project for Systemnahe Programmierung
  * 
- * This project implements a temperature measuring system.
+ * This project implements a temperature logging system.
  * The temperature and a counter is displayed on the LCD and is written every minute to the EEPROM
  * if the temperature is below min_temp or above max_temp, the buzzer rings an alarm
  * 
@@ -198,7 +198,7 @@ void initADC(void)
 {
     unsigned char channel=0x00,adc_config1=0x00,adc_config2=0x00,config3=0x00,portconfig=0x00,i=0;
     TRISAbits.RA0 = 1;
-    adc_config1 = ADC_FOSC_4 & ADC_RIGHT_JUST & ADC_4_TAD ;
+    adc_config1 = ADC_FOSC_4 & ADC_RIGHT_JUST & ADC_8_TAD ;
     adc_config2 = ADC_CH0 & ADC_INT_OFF & ADC_REF_VDD_VSS ;
     portconfig = ADC_1ANA ;
     OpenADC(adc_config1,adc_config2,portconfig);    
@@ -309,13 +309,12 @@ int write_data(unsigned char * temp, unsigned char * date)
  
  
  /**
-  * read the temperature into converted_temp
+  * read the temperature into 'temp'
   */
  void read_temperature(void)
  {
     ConvertADC();
     while(BusyADC());
-    //converted_temp.number = ((float)ReadADC() *100/255);
     temp.number = (int)((float)ReadADC() * 1000/255);
  }
  
@@ -344,12 +343,13 @@ int write_data(unsigned char * temp, unsigned char * date)
   */
 void test_readwrite(void)
 {
-    //if test data is needed, uncomment. writes 160 and 'abc' into the EEPROM.
+    //if test data is needed, uncomment. writes 160 and '61' (1:1) into the EEPROM.
     /* 
     union INT testd;
+    union UINT testd2;
     testd.number = 160;
-    char test2[3] = {'a','b','c'};    
-    write_data(testd.bytes,test2);
+    testd2.number = 61
+    write_data(testd.bytes,testd2.bytes);
     __delay_ms(1000);
     */ 
     initXLCD();
@@ -469,11 +469,11 @@ int main()
                 __delay_ms(20);
                 
                 //read the last written block from the EEPROM and display it
-                read_data(1);
-                test_readwrite();
+                //read_data(1);
+                //test_readwrite();
                 
                 //read all blocks from the EEPROM and display them
-                //print_all_data();
+                print_all_data();
             }
         }        
     }  
